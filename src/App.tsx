@@ -14,8 +14,7 @@ import { NotesView } from './components/NotesView';
 import { NowView, ElsewhereView } from './components/NowView';
 import { AboutModal } from './components/AboutModal';
 import { RssModal } from './components/RssModal';
-import { SecretBaseModal } from './components/SecretBaseModal';
-import { ShadowWorld, ShadowData } from './components/ShadowWorld';
+import { InnerWorld } from './components/inner/InnerWorld';
 import { LeafMotif, PeachHeartMotif } from './components/Motifs';
 
 export function App() {
@@ -24,12 +23,11 @@ export function App() {
   const [selectedArticle, setSelectedArticle] = useState<Article>(allArticles[0] || ({} as Article));
   const [isAboutModalOpen, setIsAboutModalOpen] = useState<boolean>(false);
   const [isRssModalOpen, setIsRssModalOpen] = useState<boolean>(false);
-  const [isSecretModalOpen, setIsSecretModalOpen] = useState<boolean>(false);
-  const [shadowData, setShadowData] = useState<ShadowData | null>(null);
+  const [isInnerWorldOpen, setIsInnerWorldOpen] = useState<boolean>(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const ambientCanvasRef = useRef<AmbientCanvasHandle | null>(null);
 
-  // 键盘暗号缓冲区 (用于连按 secret 或 base 开启秘密基地)
+  // 键盘暗号缓冲区 (用于连按 secret 或 base 开启内在世界)
   const keySequenceRef = useRef<string[]>([]);
   const keyTimerRef = useRef<any>(null);
 
@@ -59,9 +57,9 @@ export function App() {
 
   // 键盘快捷键与暗号监听
   useEffect(() => {
-    // 1. 打印控制台彩蛋 (纯净文气，无突兀 Emoji)
+    // 1. 打印控制台彩蛋 (纯净文气)
     console.log(
-      `%c fengqi. — quiet personal editorial space \n%c“清风徐来，水波不兴。愿你在此，停留片刻。”\n\n%c提示：\n1. 按下键盘【B】键可唤起微风。\n2. 连续输入【secret】或连击 3 次 Logo 句点可唤醒隐秘之境。`,
+      `%c fengqi. — quiet personal editorial space \n%c“清风徐来，水波不兴。愿你在此，停留片刻。”\n\n%c提示：\n1. 按下键盘【B】键可唤起微风。\n2. 连续输入【secret】或连击 3 次 Logo 句点可唤醒内在世界。`,
       'color: #2F4B4D; font-family: serif; font-size: 16px; font-weight: bold; padding: 4px 0;',
       'color: #5C7A7C; font-family: serif; font-size: 13px; font-style: italic; padding-bottom: 6px;',
       'color: #8EABA8; font-size: 11px;'
@@ -88,7 +86,7 @@ export function App() {
       const currentString = keySequenceRef.current.join('');
       if (currentString.endsWith('secret') || currentString.endsWith('base')) {
         keySequenceRef.current = [];
-        setIsSecretModalOpen(true);
+        setIsInnerWorldOpen(true);
       }
 
       if (keyTimerRef.current) clearTimeout(keyTimerRef.current);
@@ -142,7 +140,7 @@ export function App() {
         onNavigateHome={handleNavigateHome}
         reducedMotion={reducedMotion}
         onToggleReducedMotion={() => setReducedMotion((prev) => !prev)}
-        onOpenSecretBase={() => setIsSecretModalOpen(true)}
+        onOpenSecretBase={() => setIsInnerWorldOpen(true)}
       />
 
       {/* 主视图区域 */}
@@ -241,27 +239,18 @@ export function App() {
         onShowToast={showToast}
       />
 
-      {/* 隐秘之境密钥输入验证 Modal */}
-      <SecretBaseModal
-        isOpen={isSecretModalOpen}
-        onClose={() => setIsSecretModalOpen(false)}
-        onUnlockSuccess={(data) => setShadowData(data)}
-        onShowToast={showToast}
-      />
-
-      {/* 全屏里世界 (Shadow World) 沉浸式视图（带柔和雾气模糊过渡） */}
+      {/* 全屏内在世界 (Inner World) 沉浸式视图 */}
       <AnimatePresence>
-        {shadowData && (
+        {isInnerWorldOpen && (
           <motion.div
-            initial={{ opacity: 0, filter: 'blur(6px)' }}
+            initial={{ opacity: 0, filter: 'blur(8px)' }}
             animate={{ opacity: 1, filter: 'blur(0px)' }}
-            exit={{ opacity: 0, filter: 'blur(6px)' }}
+            exit={{ opacity: 0, filter: 'blur(8px)' }}
             transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
           >
-            <ShadowWorld
-              data={shadowData}
-              onExitAndLock={() => {
-                setShadowData(null);
+            <InnerWorld
+              onExitToSurface={() => {
+                setIsInnerWorldOpen(false);
                 showToast('已返回地表');
               }}
               onShowToast={showToast}

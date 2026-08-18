@@ -6,7 +6,7 @@ interface MotifProps {
   color?: string;
 }
 
-// 柔和微小叶片 / 小芽 (Leaf Motif)
+// 柔和微小叶片 (Leaf Motif)
 export const LeafMotif: React.FC<MotifProps> = ({ 
   className = '', 
   size = 18, 
@@ -57,6 +57,50 @@ export const StarMotif: React.FC<MotifProps> = ({
       strokeLinecap="round"
       strokeLinejoin="round"
     />
+  </svg>
+);
+
+// 弯月图案 (Crescent Moon Motif)
+export const CrescentMoonMotif: React.FC<MotifProps & { fill?: string }> = ({
+  className = '',
+  size = 18,
+  color = '#E8B48C',
+  fill = 'none',
+}) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill={fill}
+    xmlns="http://www.w3.org/2000/svg"
+    className={`inline-block ${className}`}
+  >
+    <path
+      d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"
+      stroke={color}
+      strokeWidth="1.2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
+
+// 钥孔图案 (Keyhole Motif)
+export const KeyholeMotif: React.FC<MotifProps> = ({
+  className = '',
+  size = 16,
+  color = '#A89E91',
+}) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    className={`inline-block ${className}`}
+  >
+    <circle cx="12" cy="9" r="4" stroke={color} strokeWidth="1.2" />
+    <path d="M10 12L8.5 20H15.5L14 12" stroke={color} strokeWidth="1.2" strokeLinejoin="round" />
   </svg>
 );
 
@@ -149,19 +193,3 @@ export const FlowerMotif: React.FC<MotifProps> = ({
     <circle cx="12" cy="12" r="2" fill="#A7CFC3" />
   </svg>
 );
-
-// 板块固定符号映射
-export const SectionSymbol: React.FC<{ symbol: string; className?: string }> = ({ symbol, className = '' }) => {
-  switch (symbol) {
-    case '○':
-      return <span className={`inline-flex items-center justify-center font-sans font-light ${className}`}>○</span>;
-    case '□':
-      return <span className={`inline-flex items-center justify-center font-sans font-light ${className}`}>□</span>;
-    case '+':
-      return <span className={`inline-flex items-center justify-center font-sans font-light text-base ${className}`}>+</span>;
-    case '~':
-      return <span className={`inline-flex items-center justify-center font-sans font-light text-base ${className}`}>~</span>;
-    default:
-      return <span className={className}>{symbol}</span>;
-  }
-};
