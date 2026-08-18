@@ -165,6 +165,13 @@ coverImage: /images/cover.jpg
 
 ---
 
+## 🌸 致谢与字体许可说明 (Credits)
+
+- 排版字体支持包含开源中文字体 **[霞鹜文楷 (LXGW WenKai)](https://github.com/lxgw/LxgwWenKai)** 与 **[思源宋体 (Source Han Serif)](https://github.com/adobe-fonts/source-han-serif)**，遵循 **[SIL Open Font License 1.1](http://scripts.sil.org/OFL)** 开源许可。
+- 感谢所有开源贡献者为优雅中文排版所做的努力。
+
+---
+
 ## 📄 开源许可
 
 本项目基于 [MIT License](./LICENSE) 开源。欢迎自由使用、分发与二次创作。
