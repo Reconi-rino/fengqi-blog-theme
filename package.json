@@ -1,7 +1,9 @@
 {
-  "name": "reconi-blog",
-  "private": true,
+  "name": "fengqi-blog-theme",
   "version": "1.0.0",
+  "description": "A quiet personal editorial blog theme built with React 19, TypeScript and Tailwind CSS v4",
+  "author": "Reconi <1599408637@qq.com>",
+  "license": "MIT",
   "type": "module",
   "scripts": {
     "dev": "vite",
