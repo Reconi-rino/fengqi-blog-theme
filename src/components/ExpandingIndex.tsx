@@ -7,13 +7,11 @@ import { LeafMotif, FlowerMotif, PeachHeartMotif } from './Motifs';
 interface ExpandingIndexProps {
   onSelectSection: (sectionId: ViewMode) => void;
   onClose: () => void;
-  onOpenSecretBase?: () => void;
 }
 
 export const ExpandingIndex: React.FC<ExpandingIndexProps> = ({
   onSelectSection,
   onClose,
-  onOpenSecretBase,
 }) => {
   // 动态获取各板块实际数量
   const getSectionCount = (id: string, defaultCount: number) => {
@@ -95,7 +93,7 @@ export const ExpandingIndex: React.FC<ExpandingIndexProps> = ({
           ))}
         </div>
 
-        {/* 底部副级导航与微光隐秘之境入口 */}
+        {/* 底部副级导航 (已彻底移除显性 secret 入口，回归纯粹彩蛋) */}
         <div className="mt-10 pt-6 border-t border-[#C7D9D6]/40 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[#5C7A7C]">
           <div className="flex items-center gap-5">
             <button
@@ -118,19 +116,6 @@ export const ExpandingIndex: React.FC<ExpandingIndexProps> = ({
             >
               Elsewhere 外部连接
             </button>
-            {onOpenSecretBase && (
-              <>
-                <span className="text-[#C7D9D6]">/</span>
-                <button
-                  onClick={onOpenSecretBase}
-                  className="text-[#8EABA8] hover:text-[#A7CFC3] transition-colors flex items-center gap-1 focus:outline-none group"
-                  title="隐秘之境 (需密钥)"
-                >
-                  <span className="text-[10px] group-hover:rotate-45 transition-transform">✦</span>
-                  <span className="font-sans text-[11px]">Secret</span>
-                </button>
-              </>
-            )}
           </div>
 
           <div className="flex items-center gap-2 text-[#8EABA8]">

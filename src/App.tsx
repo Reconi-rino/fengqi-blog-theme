@@ -15,6 +15,7 @@ import { NowView, ElsewhereView } from './components/NowView';
 import { AboutModal } from './components/AboutModal';
 import { RssModal } from './components/RssModal';
 import { SecretBaseModal } from './components/SecretBaseModal';
+import { ShadowWorld, ShadowData } from './components/ShadowWorld';
 import { LeafMotif, PeachHeartMotif } from './components/Motifs';
 
 export function App() {
@@ -24,6 +25,7 @@ export function App() {
   const [isAboutModalOpen, setIsAboutModalOpen] = useState<boolean>(false);
   const [isRssModalOpen, setIsRssModalOpen] = useState<boolean>(false);
   const [isSecretModalOpen, setIsSecretModalOpen] = useState<boolean>(false);
+  const [shadowData, setShadowData] = useState<ShadowData | null>(null);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const ambientCanvasRef = useRef<AmbientCanvasHandle | null>(null);
 
@@ -153,10 +155,6 @@ export function App() {
               key="expanding-index"
               onSelectSection={handleSelectSection}
               onClose={() => setIsIndexExpanded(false)}
-              onOpenSecretBase={() => {
-                setIsIndexExpanded(false);
-                setIsSecretModalOpen(true);
-              }}
             />
           ) : (
             /* 各常规视图 */
@@ -244,12 +242,34 @@ export function App() {
         onShowToast={showToast}
       />
 
-      {/* 隐秘之境 (Secret Base) AES-256 加密解密 Modal */}
+      {/* 隐秘之境密钥输入验证 Modal */}
       <SecretBaseModal
         isOpen={isSecretModalOpen}
         onClose={() => setIsSecretModalOpen(false)}
+        onUnlockSuccess={(data) => setShadowData(data)}
         onShowToast={showToast}
       />
+
+      {/* 全屏里世界 (Shadow World) 沉浸式视图 */}
+      <AnimatePresence>
+        {shadowData && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.98 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.98 }}
+            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <ShadowWorld
+              data={shadowData}
+              onExitAndLock={() => {
+                setShadowData(null);
+                showToast('已安全退出里世界 🔒');
+              }}
+              onShowToast={showToast}
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* 浮动轻量 Toast 提示 */}
       <AnimatePresence>
