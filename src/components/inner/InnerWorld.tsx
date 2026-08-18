@@ -89,7 +89,7 @@ export const InnerWorld: React.FC<InnerWorldProps> = ({
   return (
     <div
       onClick={handleBackgroundClick}
-      className="fixed inset-0 z-50 inner-world-background text-[#D7C9B8] flex flex-col overflow-y-auto selection:bg-[#E8B48C]/30 selection:text-[#F0E8DD]"
+      className="w-full h-full inner-world-background text-[#D7C9B8] flex flex-col overflow-y-auto selection:bg-[#E8B48C]/30 selection:text-[#F0E8DD]"
     >
       {/* 专属暗夜生态画布 */}
       <InnerAmbientCanvas

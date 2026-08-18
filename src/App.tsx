@@ -47,6 +47,18 @@ export function App() {
     }, 2800);
   };
 
+  // 锁定/解除 body 滚动条 (进入里世界时避免地表层滚动穿透)
+  useEffect(() => {
+    if (isInnerWorldOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isInnerWorldOpen]);
+
   // 触发「起风了」微彩蛋 (Breeze Mode)
   const triggerBreeze = () => {
     if (ambientCanvasRef.current) {
@@ -239,14 +251,15 @@ export function App() {
         onShowToast={showToast}
       />
 
-      {/* 全屏内在世界 (Inner World) 沉浸式视图 */}
+      {/* 全屏内在世界 (Inner World) 沉浸式视图（fixed 全屏遮罩层） */}
       <AnimatePresence>
         {isInnerWorldOpen && (
           <motion.div
-            initial={{ opacity: 0, filter: 'blur(8px)' }}
-            animate={{ opacity: 1, filter: 'blur(0px)' }}
-            exit={{ opacity: 0, filter: 'blur(8px)' }}
-            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+            className="fixed inset-0 z-50 overflow-hidden bg-[#0E1316]"
           >
             <InnerWorld
               onExitToSurface={() => {
