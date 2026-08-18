@@ -59,9 +59,9 @@ export function App() {
 
   // 键盘快捷键与暗号监听
   useEffect(() => {
-    // 1. 打印控制台彩蛋
+    // 1. 打印控制台彩蛋 (纯净文气，无突兀 Emoji)
     console.log(
-      `%c 🍃 fengqi. — quiet personal editorial space \n%c“清风徐来，水波不兴。愿你在此，停留片刻。”\n\n%c💡 发现了一个小彩蛋：\n1. 在页面按下键盘【B】键，可以唤起一阵清风～\n2. 连续输入【secret】或连击 3 次 Logo 句点可唤醒隐秘之境 ✦`,
+      `%c fengqi. — quiet personal editorial space \n%c“清风徐来，水波不兴。愿你在此，停留片刻。”\n\n%c提示：\n1. 按下键盘【B】键可唤起微风。\n2. 连续输入【secret】或连击 3 次 Logo 句点可唤醒隐秘之境。`,
       'color: #2F4B4D; font-family: serif; font-size: 16px; font-weight: bold; padding: 4px 0;',
       'color: #5C7A7C; font-family: serif; font-size: 13px; font-style: italic; padding-bottom: 6px;',
       'color: #8EABA8; font-size: 11px;'
@@ -69,7 +69,6 @@ export function App() {
 
     // 2. 监听按键
     const handleKeyDown = (e: KeyboardEvent) => {
-      // 避免在输入框中触发
       const target = e.target as HTMLElement;
       if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable) {
         return;
@@ -250,20 +249,20 @@ export function App() {
         onShowToast={showToast}
       />
 
-      {/* 全屏里世界 (Shadow World) 沉浸式视图 */}
+      {/* 全屏里世界 (Shadow World) 沉浸式视图（带柔和雾气模糊过渡） */}
       <AnimatePresence>
         {shadowData && (
           <motion.div
-            initial={{ opacity: 0, scale: 0.98 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.98 }}
-            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+            initial={{ opacity: 0, filter: 'blur(6px)' }}
+            animate={{ opacity: 1, filter: 'blur(0px)' }}
+            exit={{ opacity: 0, filter: 'blur(6px)' }}
+            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
           >
             <ShadowWorld
               data={shadowData}
               onExitAndLock={() => {
                 setShadowData(null);
-                showToast('已安全退出里世界 🔒');
+                showToast('已返回地表');
               }}
               onShowToast={showToast}
             />

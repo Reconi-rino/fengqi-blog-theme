@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { rawSecretCiphertext } from '../utils/contentLoader';
 import { decryptSecret } from '../utils/crypto';
 import { ShadowData } from './ShadowWorld';
+import { StarMotif } from './Motifs';
 
 interface SecretBaseModalProps {
   isOpen: boolean;
@@ -32,7 +33,7 @@ export const SecretBaseModal: React.FC<SecretBaseModalProps> = ({
   const handleUnlock = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
     if (!password.trim()) {
-      setErrorMessage('请输入解密密钥');
+      setErrorMessage('请输入密钥');
       return;
     }
 
@@ -41,7 +42,7 @@ export const SecretBaseModal: React.FC<SecretBaseModalProps> = ({
 
     try {
       if (!rawSecretCiphertext) {
-        throw new Error('未找到加密密文文件 (content/secret.enc)');
+        throw new Error('未找到密文数据文件 (content/secret.enc)');
       }
       const plain = await decryptSecret(rawSecretCiphertext, password);
       
@@ -49,11 +50,10 @@ export const SecretBaseModal: React.FC<SecretBaseModalProps> = ({
       try {
         parsedData = JSON.parse(plain);
       } catch {
-        // 兼容单段纯 Markdown 格式
         parsedData = {
           version: '1.0',
           title: 'fengqi.shadow',
-          motto: '墨夜微光，不设防备的自留地。',
+          motto: '墨夜微光，不设防备的自留地',
           articles: [
             {
               id: 'shadow-legacy',
@@ -69,7 +69,7 @@ export const SecretBaseModal: React.FC<SecretBaseModalProps> = ({
         };
       }
 
-      onShowToast('密室之门已开启，正在进入里世界 ✦');
+      onShowToast('正在进入隐秘之境');
       onUnlockSuccess(parsedData);
       onClose();
     } catch (err: any) {
@@ -89,15 +89,15 @@ export const SecretBaseModal: React.FC<SecretBaseModalProps> = ({
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           onClick={onClose}
-          className="fixed inset-0 z-50 bg-[#0B1314]/80 backdrop-blur-md flex items-center justify-center p-4 sm:p-8"
+          className="fixed inset-0 z-50 bg-[#081011]/85 backdrop-blur-md flex items-center justify-center p-4 sm:p-8"
         >
           <motion.div
-            initial={{ scale: 0.95, opacity: 0, y: 20 }}
+            initial={{ scale: 0.96, opacity: 0, y: 16 }}
             animate={{ scale: 1, opacity: 1, y: 0 }}
-            exit={{ scale: 0.95, opacity: 0, y: 15 }}
+            exit={{ scale: 0.96, opacity: 0, y: 12 }}
             transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
             onClick={(e) => e.stopPropagation()}
-            className="w-full max-w-md rounded-3xl border border-[#A7CFC3]/25 bg-[#121E20]/95 text-[#F3F6F4] shadow-2xl relative overflow-hidden flex flex-col p-8 sm:p-10 text-center space-y-7"
+            className="w-full max-w-md rounded-3xl border border-[#A7CFC3]/20 bg-[#121E20]/95 text-[#F3F6F4] shadow-2xl relative overflow-hidden flex flex-col p-8 sm:p-10 text-center space-y-6"
           >
             {/* 环境微光 */}
             <div className="absolute -top-20 -right-20 w-60 h-60 rounded-full bg-[#A7CFC3]/15 blur-3xl pointer-events-none" />
@@ -111,34 +111,32 @@ export const SecretBaseModal: React.FC<SecretBaseModalProps> = ({
               ✕
             </button>
 
-            {/* 图标与标题 */}
+            {/* 星芒图标与标题 */}
             <div className="space-y-2 relative z-10">
-              <div className="w-14 h-14 mx-auto rounded-full bg-[#A7CFC3]/15 border border-[#A7CFC3]/30 flex items-center justify-center text-2xl mb-3 animate-pulse">
-                ✦
+              <div className="w-12 h-12 mx-auto rounded-full bg-[#A7CFC3]/15 border border-[#A7CFC3]/25 flex items-center justify-center mb-3">
+                <StarMotif size={20} color="#A7CFC3" />
               </div>
               <h3 className="font-serif text-2xl font-normal text-[#F3F6F4] tracking-wide">
-                隐秘之境 · 密钥验证
+                隐秘之境
               </h3>
-              <p className="font-sans text-xs text-[#8EABA8] leading-relaxed max-w-xs mx-auto">
-                即将进入博客的「里世界 (Shadow World)」。
-                <br />
-                存放着独立的私密 Writing 与 Notes。
+              <p className="font-serif text-xs text-[#8EABA8] leading-relaxed max-w-xs mx-auto">
+                输入密钥以开启另一处自留地。
               </p>
             </div>
 
             {/* 表单输入 */}
             <form onSubmit={handleUnlock} className="space-y-4 relative z-10">
               <motion.div
-                animate={isShake ? { x: [-10, 10, -8, 8, -4, 4, 0] } : {}}
-                transition={{ duration: 0.4 }}
+                animate={isShake ? { x: [-8, 8, -6, 6, -3, 3, 0] } : {}}
+                transition={{ duration: 0.35 }}
               >
                 <input
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="输入解密密码..."
+                  placeholder="请输入密钥..."
                   autoFocus
-                  className="w-full px-5 py-3.5 rounded-xl bg-black/40 border border-[#A7CFC3]/30 text-sm font-sans text-[#F3F6F4] placeholder-[#8EABA8]/50 focus:outline-none focus:border-[#A7CFC3] transition-all text-center tracking-widest"
+                  className="w-full px-5 py-3 rounded-xl bg-black/40 border border-[#A7CFC3]/30 text-sm font-sans text-[#F3F6F4] placeholder-[#8EABA8]/50 focus:outline-none focus:border-[#A7CFC3] transition-all text-center tracking-widest"
                 />
               </motion.div>
 
@@ -151,21 +149,18 @@ export const SecretBaseModal: React.FC<SecretBaseModalProps> = ({
               <button
                 type="submit"
                 disabled={isDecrypting}
-                className="w-full py-3.5 rounded-xl bg-[#A7CFC3] hover:bg-[#B8DCCF] text-[#0E1819] text-sm font-medium font-sans transition-all duration-200 shadow-md hover:shadow-lg disabled:opacity-50 flex items-center justify-center gap-2 focus:outline-none"
+                className="w-full py-3 rounded-xl bg-[#A7CFC3] hover:bg-[#B8DCCF] text-[#0E1819] text-sm font-medium font-sans transition-all duration-200 shadow-md hover:shadow-lg disabled:opacity-50 flex items-center justify-center gap-2 focus:outline-none"
               >
                 {isDecrypting ? (
-                  <>
-                    <span className="animate-spin text-xs">🌀</span>
-                    <span>正在解密里世界...</span>
-                  </>
+                  <span>正在开启...</span>
                 ) : (
-                  <span>开启里世界传送门 →</span>
+                  <span>进入空间 →</span>
                 )}
               </button>
             </form>
 
-            <div className="pt-2 text-[11px] text-[#8EABA8]/60 font-sans relative z-10">
-              💡 默认初始解密密码：<code className="px-1.5 py-0.5 rounded bg-white/10 font-mono text-[#A7CFC3]">fengqi2026</code>
+            <div className="pt-2 text-[11px] text-[#8EABA8]/50 font-sans relative z-10">
+              初始密码：<code className="px-1.5 py-0.5 rounded bg-white/10 font-mono text-[#A7CFC3]">fengqi2026</code>
             </div>
           </motion.div>
         </motion.div>

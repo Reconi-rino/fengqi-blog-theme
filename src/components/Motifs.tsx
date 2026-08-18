@@ -36,6 +36,30 @@ export const LeafMotif: React.FC<MotifProps> = ({
   </svg>
 );
 
+// 四角星芒图案 (Star / Sparkle Motif)
+export const StarMotif: React.FC<MotifProps> = ({
+  className = '',
+  size = 16,
+  color = '#A7CFC3',
+}) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    className={`inline-block ${className}`}
+  >
+    <path
+      d="M12 2C12 7.5 16.5 12 22 12C16.5 12 12 16.5 12 22C12 16.5 7.5 12 2 12C7.5 12 12 7.5 12 2Z"
+      stroke={color}
+      strokeWidth="1.3"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
+
 // 柔和气泡 (Bubble Motif)
 export const BubbleMotif: React.FC<MotifProps> = ({ 
   className = '', 
