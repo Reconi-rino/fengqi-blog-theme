@@ -32,11 +32,9 @@
 
 ```text
 ├── fengqi.config.yaml       # 🛠️ 站点总配置文件（个人信息、板块映射、动效偏好）
+├── DEPLOYMENT.md            # 🚀 完整多平台部署教程 (Vercel / GitHub Pages / Cloudflare)
 ├── content/                 # 📝 内容数据目录（开箱即用，纯 Markdown / YAML）
 │   ├── posts/               # 文章目录 (*.md)
-│   │   ├── 01-misty-morning.md
-│   │   ├── 07-markdown-features-demo.md
-│   │   └── ...
 │   ├── about.md             # 关于我正文 (Markdown)
 │   ├── now.md               # 近况页面正文 (Markdown)
 │   ├── photos.yaml          # 摄影作品列表
@@ -46,11 +44,8 @@
 ├── public/                  # 🌐 静态资源
 │   ├── feed.xml             # 预渲染静态 RSS Feed
 │   └── favicon.svg          # 站点图标
-├── src/                     # 💻 主题核心源码 (React + TS + Tailwind v4)
-│   ├── components/          # 视图与交互组件
-│   ├── utils/               # Markdown/YAML 加载引擎与 RSS 生成器
-│   ├── index.css            # 设计系统设计令牌与水彩背景
-│   └── App.tsx              # 应用入口
+├── src/                     # 💻 主题核心源码 (React 19 + TypeScript + Tailwind v4)
+├── .github/workflows/       # 🤖 GitHub Actions 自动化部署工作流
 ├── package.json
 └── README.md
 ```
@@ -150,15 +145,14 @@ coverImage: /images/cover.jpg
 
 ## 🚢 一键部署指南
 
-本主题为纯静态客户端驱动，可 0 配置部署于各大静态平台：
+本主题已内置 **GitHub Actions 自动化部署工作流**，支持 0 配置部署到各大平台：
 
-### Vercel / Netlify / Cloudflare Pages
-- **Build Command**: `npm run build`
-- **Output Directory**: `dist`
-- **Node Version**: 18+
+- **Vercel**（推荐，零配置导入即可）
+- **GitHub Pages**（已内置 `.github/workflows/deploy.yml`，推送代码自动构建上线）
+- **Cloudflare Pages**（全球 Edge 加速，无限流量）
+- **个人服务器 Nginx / Docker**
 
-### GitHub Pages
-支持直接通过 GitHub Actions 将 `dist/` 部署至 `gh-pages` 分支。
+👉 **详细部署步骤请查看：[DEPLOYMENT.md (完整部署指南)](./DEPLOYMENT.md)**
 
 ---
 
