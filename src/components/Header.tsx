@@ -81,7 +81,6 @@ export const Header: React.FC<HeaderProps> = ({
             <span
               onClick={handlePeriodClick}
               className="font-serif text-2xl sm:text-3xl font-semibold tracking-tight text-[#2F4B4D] hover:text-[#A7CFC3] transition-colors cursor-pointer"
-              title="连按 3 次唤醒隐秘之境 ✦"
             >
               .
             </span>

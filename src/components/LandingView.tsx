@@ -49,7 +49,7 @@ export const LandingView: React.FC<LandingViewProps> = ({
             <button
               onClick={onTriggerBreeze}
               className="group p-1 focus:outline-none transition-transform hover:scale-110 active:scale-95"
-              title="点击唤起一阵微风 🍃 (或按键盘 B 键)"
+              aria-label="微风"
             >
               <WavyLineMotif
                 width={48}
@@ -164,7 +164,7 @@ export const LandingView: React.FC<LandingViewProps> = ({
               
               <div className="flex items-center justify-between text-xs text-[#8EABA8]">
                 <span>○ editorial journal</span>
-                <button onClick={onTriggerBreeze} className="focus:outline-none hover:scale-125 transition-transform" title="起风了">
+                <button onClick={onTriggerBreeze} className="focus:outline-none hover:scale-125 transition-transform" aria-label="微风">
                   <PeachHeartMotif size={12} color="#F6DCCB" />
                 </button>
               </div>

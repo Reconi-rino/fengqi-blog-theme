@@ -69,12 +69,11 @@ export function App() {
 
   // 键盘快捷键与暗号监听
   useEffect(() => {
-    // 1. 打印控制台彩蛋 (纯净文气)
+    // 1. 打印控制台文气标语
     console.log(
-      `%c fengqi. — quiet personal editorial space \n%c“清风徐来，水波不兴。愿你在此，停留片刻。”\n\n%c提示：\n1. 按下键盘【B】键可唤起微风。\n2. 连续输入【secret】或连击 3 次 Logo 句点可唤醒内在世界。`,
+      `%c fengqi. — quiet personal editorial space \n%c“清风徐来，水波不兴。愿你在此，停留片刻。”`,
       'color: #2F4B4D; font-family: serif; font-size: 16px; font-weight: bold; padding: 4px 0;',
-      'color: #5C7A7C; font-family: serif; font-size: 13px; font-style: italic; padding-bottom: 6px;',
-      'color: #8EABA8; font-size: 11px;'
+      'color: #5C7A7C; font-family: serif; font-size: 13px; font-style: italic; padding-bottom: 6px;'
     );
 
     // 2. 监听按键
@@ -227,7 +226,7 @@ export function App() {
           <button
             onClick={triggerBreeze}
             className="text-[#8EABA8] hover:text-[#2F4B4D] hover:scale-125 transition-all focus:outline-none"
-            title="起风了 🍃"
+            aria-label="微风"
           >
             <PeachHeartMotif size={11} color="#F6DCCB" />
           </button>
