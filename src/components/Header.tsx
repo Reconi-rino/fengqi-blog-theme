@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ViewMode } from '../types';
 import { siteConfig } from '../utils/contentLoader';
@@ -11,6 +11,7 @@ interface HeaderProps {
   onNavigateHome: () => void;
   reducedMotion: boolean;
   onToggleReducedMotion: () => void;
+  onOpenSecretBase?: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -20,8 +21,11 @@ export const Header: React.FC<HeaderProps> = ({
   onNavigateHome,
   reducedMotion,
   onToggleReducedMotion,
+  onOpenSecretBase,
 }) => {
   const [scrollY, setScrollY] = useState(0);
+  const clickCountRef = useRef(0);
+  const clickTimerRef = useRef<any>(null);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -31,9 +35,29 @@ export const Header: React.FC<HeaderProps> = ({
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // 连击 3 次句点触发秘密基地彩蛋
+  const handlePeriodClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    clickCountRef.current += 1;
+    if (clickTimerRef.current) clearTimeout(clickTimerRef.current);
+
+    if (clickCountRef.current >= 3) {
+      clickCountRef.current = 0;
+      onOpenSecretBase?.();
+    } else {
+      clickTimerRef.current = setTimeout(() => {
+        clickCountRef.current = 0;
+      }, 1000);
+    }
+  };
+
   // 仅在 Landing 首页且未向下滚动时显示灰色副标，在 writing / article / notes 等阅读页面及滚动后平滑淡出收起
   const isScrolled = scrollY > 40;
   const showSubtitle = currentView === 'landing' && !isScrolled && !isIndexExpanded;
+
+  const siteTitle = siteConfig.site.title || 'fengqi.';
+  const hasPeriod = siteTitle.endsWith('.');
+  const baseTitle = hasPeriod ? siteTitle.slice(0, -1) : siteTitle;
 
   return (
     <header
@@ -44,16 +68,27 @@ export const Header: React.FC<HeaderProps> = ({
       }`}
     >
       {/* 站点左上角 Logo */}
-      <button
-        onClick={onNavigateHome}
-        className="pointer-events-auto group flex items-baseline gap-2.5 text-left focus:outline-none"
-        title="返回首页"
-      >
-        <span className="font-serif text-2xl sm:text-3xl font-semibold tracking-tight text-[#2F4B4D] group-hover:text-[#243B3D] transition-colors">
-          {siteConfig.site.title || 'fengqi.'}
-        </span>
+      <div className="pointer-events-auto flex items-baseline gap-2.5">
+        <button
+          onClick={onNavigateHome}
+          className="group flex items-baseline text-left focus:outline-none"
+          title="返回首页"
+        >
+          <span className="font-serif text-2xl sm:text-3xl font-semibold tracking-tight text-[#2F4B4D] group-hover:text-[#243B3D] transition-colors">
+            {baseTitle}
+          </span>
+          {hasPeriod && (
+            <span
+              onClick={handlePeriodClick}
+              className="font-serif text-2xl sm:text-3xl font-semibold tracking-tight text-[#2F4B4D] hover:text-[#A7CFC3] transition-colors cursor-pointer"
+              title="连按 3 次唤醒隐秘之境 ✦"
+            >
+              .
+            </span>
+          )}
+        </button>
 
-        {/* 灰色副标：整句纯淡入淡出（Opacity + Translate），避免由于宽度裁剪导致的破折号（—）小条孤立提前显现 */}
+        {/* 灰色副标：整句纯淡入淡出（Opacity + Translate） */}
         <AnimatePresence>
           {showSubtitle && (
             <motion.span
@@ -67,7 +102,7 @@ export const Header: React.FC<HeaderProps> = ({
             </motion.span>
           )}
         </AnimatePresence>
-      </button>
+      </div>
 
       {/* 右上角操作区：保持纯粹克制 */}
       <div className="pointer-events-auto flex items-center gap-3 sm:gap-4">

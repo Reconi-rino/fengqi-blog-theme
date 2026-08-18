@@ -165,3 +165,9 @@ const elsewhereFiles = import.meta.glob<string>('/content/elsewhere.yaml', { que
 export const allElsewhere: ElsewhereItem[] = Object.values(elsewhereFiles).length > 0
   ? ((yaml.load(Object.values(elsewhereFiles)[0]) as ElsewhereItem[]) || [])
   : [];
+
+// 8. 动态加载 content/secret.enc 密文
+const secretFiles = import.meta.glob<string>('/content/secret.enc', { query: '?raw', eager: true, import: 'default' });
+export const rawSecretCiphertext = Object.values(secretFiles).length > 0
+  ? Object.values(secretFiles)[0].trim()
+  : '';
