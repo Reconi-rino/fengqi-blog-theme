@@ -18,7 +18,7 @@ export const InnerStudio: React.FC<InnerStudioProps> = ({
   onExitToSurface,
   onShowToast,
 }) => {
-  const [studioType, setStudioType] = useState<'article' | 'note'>('article');
+  const [studioType, setStudioType] = useState<'article' | 'note' | 'manage'>('article');
   const [title, setTitle] = useState('');
   const [category, setCategory] = useState('随笔');
   const [tag, setTag] = useState('日常');
@@ -26,21 +26,43 @@ export const InnerStudio: React.FC<InnerStudioProps> = ({
   const [password, setPassword] = useState('');
   const [generatedCipher, setGeneratedCipher] = useState<string | null>(null);
 
+  // 删除单个文章
+  const handleDeleteArticle = async (id: string) => {
+    const updatedArticles = (data.articles || []).filter((a) => a.id !== id);
+    const updatedData: ShadowData = {
+      ...data,
+      articles: updatedArticles,
+    };
+    onUpdateData(updatedData);
+    onShowToast('文章已从内存移除，请在下方生成新密文');
+  };
+
+  // 删除单个随记
+  const handleDeleteNote = async (id: string) => {
+    const updatedNotes = (data.notes || []).filter((n) => n.id !== id);
+    const updatedData: ShadowData = {
+      ...data,
+      notes: updatedNotes,
+    };
+    onUpdateData(updatedData);
+    onShowToast('随记已从内存移除，请在下方生成新密文');
+  };
+
   const handleGenerateCipher = async () => {
-    if (!content.trim() || !password.trim()) {
-      onShowToast('请填写完整正文与加密密码');
+    if (!password.trim()) {
+      onShowToast('请输入用于加密数据库的密码');
       return;
     }
 
-    const todayStr = new Date().toISOString().slice(0, 10).replace(/-/g, '.');
     let updatedArticles = [...(data.articles || [])];
     let updatedNotes = [...(data.notes || [])];
 
     if (studioType === 'article') {
-      if (!title.trim()) {
-        onShowToast('请输入文章标题');
+      if (!title.trim() || !content.trim()) {
+        onShowToast('请填写文章标题与正文');
         return;
       }
+      const todayStr = new Date().toISOString().slice(0, 10).replace(/-/g, '.');
       const newArt: ShadowArticle = {
         id: `inner-art-${Date.now()}`,
         title: title.trim(),
@@ -51,7 +73,12 @@ export const InnerStudio: React.FC<InnerStudioProps> = ({
         content: content,
       };
       updatedArticles = [newArt, ...updatedArticles];
-    } else {
+    } else if (studioType === 'note') {
+      if (!content.trim()) {
+        onShowToast('请填写随记正文');
+        return;
+      }
+      const todayStr = new Date().toISOString().slice(0, 10).replace(/-/g, '.');
       const newN: ShadowNote = {
         id: `inner-note-${Date.now()}`,
         date: todayStr,
@@ -135,11 +162,11 @@ export const InnerStudio: React.FC<InnerStudioProps> = ({
             密室工作台
           </h1>
           <p className="font-serif text-xs text-[#767E79]">
-            在此撰写与更新内在世界的私密文章或随记，生成加密密文包。
+            在此撰写、管理与删除内在世界的私密条目，并一键重新生成加密密文包。
           </p>
         </div>
 
-        {/* 类型切换 */}
+        {/* 标签切换 */}
         <div className="flex items-center gap-3 text-xs font-sans">
           <button
             onClick={() => setStudioType('article')}
@@ -161,11 +188,21 @@ export const InnerStudio: React.FC<InnerStudioProps> = ({
           >
             + 记录 Notes 随记
           </button>
+          <button
+            onClick={() => setStudioType('manage')}
+            className={`px-4 py-2 rounded-xl transition-all ${
+              studioType === 'manage'
+                ? 'bg-[#E8B48C] text-[#0E1316] font-medium shadow-xs'
+                : 'bg-[#151E22]/70 text-[#A89E91] border border-[rgba(215,201,184,0.1)] hover:text-[#D7C9B8]'
+            }`}
+          >
+            管理与删除条目 ({((data.articles || []).length + (data.notes || []).length)})
+          </button>
         </div>
 
-        {/* 编辑表单 */}
-        <div className="inner-card-soft p-6 sm:p-8 space-y-5">
-          {studioType === 'article' ? (
+        {/* 1. 撰写文章态 */}
+        {studioType === 'article' && (
+          <div className="inner-card-soft p-6 sm:p-8 space-y-5">
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <input
                 type="text"
@@ -182,7 +219,20 @@ export const InnerStudio: React.FC<InnerStudioProps> = ({
                 className="px-4 py-3 rounded-xl bg-[#0E1316]/60 border border-[rgba(215,201,184,0.15)] text-sm text-[#D7C9B8] placeholder-[#767E79] focus:outline-none focus:border-[#E8B48C]"
               />
             </div>
-          ) : (
+
+            <textarea
+              rows={10}
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
+              placeholder="在此输入 Markdown 正文..."
+              className="w-full p-4 rounded-xl bg-[#0E1316]/60 border border-[rgba(215,201,184,0.15)] text-xs font-mono text-[#D7C9B8] placeholder-[#767E79] focus:outline-none focus:border-[#E8B48C] resize-none leading-relaxed"
+            />
+          </div>
+        )}
+
+        {/* 2. 记录随记态 */}
+        {studioType === 'note' && (
+          <div className="inner-card-soft p-6 sm:p-8 space-y-5">
             <input
               type="text"
               value={tag}
@@ -190,31 +240,86 @@ export const InnerStudio: React.FC<InnerStudioProps> = ({
               placeholder="随记标签 (如: 日常 / 观察 / 灵感 / 梦境)..."
               className="w-full px-4 py-3 rounded-xl bg-[#0E1316]/60 border border-[rgba(215,201,184,0.15)] text-sm text-[#D7C9B8] placeholder-[#767E79] focus:outline-none focus:border-[#E8B48C]"
             />
-          )}
 
-          <textarea
-            rows={10}
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-            placeholder={`在此输入 ${studioType === 'article' ? 'Markdown 正文...' : '随记短文...'}`}
-            className="w-full p-4 rounded-xl bg-[#0E1316]/60 border border-[rgba(215,201,184,0.15)] text-xs font-mono text-[#D7C9B8] placeholder-[#767E79] focus:outline-none focus:border-[#E8B48C] resize-none leading-relaxed"
-          />
-
-          <div className="flex flex-col sm:flex-row gap-3 pt-2">
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="输入解密密码以重新加密整个数据库..."
-              className="flex-1 px-4 py-3 rounded-xl bg-[#0E1316]/60 border border-[rgba(215,201,184,0.15)] text-xs font-sans text-[#D7C9B8] placeholder-[#767E79] focus:outline-none focus:border-[#E8B48C]"
+            <textarea
+              rows={8}
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
+              placeholder="在此输入随记短文..."
+              className="w-full p-4 rounded-xl bg-[#0E1316]/60 border border-[rgba(215,201,184,0.15)] text-xs font-mono text-[#D7C9B8] placeholder-[#767E79] focus:outline-none focus:border-[#E8B48C] resize-none leading-relaxed"
             />
-            <button
-              onClick={handleGenerateCipher}
-              className="px-6 py-3 rounded-xl bg-[#E8B48C] text-[#0E1316] text-xs font-medium hover:bg-[#F3C49E] transition-colors focus:outline-none shrink-0"
-            >
-              生成并应用加密数据
-            </button>
           </div>
+        )}
+
+        {/* 3. 管理与删除已存条目 */}
+        {studioType === 'manage' && (
+          <div className="inner-card-soft p-6 sm:p-8 space-y-8">
+            {/* 文章列表管理 */}
+            <div className="space-y-3">
+              <h3 className="text-xs font-mono text-[#E8B48C] uppercase tracking-wider">
+                已存 Writing 文章 ({(data.articles || []).length})
+              </h3>
+              <div className="space-y-2 max-h-60 overflow-y-auto pr-2 divide-y divide-[rgba(215,201,184,0.06)]">
+                {(data.articles || []).map((art) => (
+                  <div key={art.id} className="pt-2 pb-2 flex items-center justify-between gap-4">
+                    <div className="space-y-0.5 overflow-hidden">
+                      <div className="text-sm font-serif text-[#D7C9B8] truncate">{art.title}</div>
+                      <div className="text-[11px] font-mono text-[#767E79]">{art.date} · {art.category}</div>
+                    </div>
+                    <button
+                      onClick={() => handleDeleteArticle(art.id)}
+                      className="text-xs font-sans text-[#767E79] hover:text-[#E8B48C] hover:bg-[#E8B48C]/10 px-2.5 py-1 rounded-lg border border-[rgba(215,201,184,0.1)] transition-colors focus:outline-none shrink-0"
+                    >
+                      ✕ 删除
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* 随记列表管理 */}
+            <div className="space-y-3 pt-4 border-t border-[rgba(215,201,184,0.1)]">
+              <h3 className="text-xs font-mono text-[#E8B48C] uppercase tracking-wider">
+                已存 Notes 随记 ({(data.notes || []).length})
+              </h3>
+              <div className="space-y-2 max-h-60 overflow-y-auto pr-2 divide-y divide-[rgba(215,201,184,0.06)]">
+                {(data.notes || []).map((note) => {
+                  const firstLine = note.content.split('\n')[0].replace(/^[#\s*-_]+/, '');
+                  return (
+                    <div key={note.id} className="pt-2 pb-2 flex items-center justify-between gap-4">
+                      <div className="space-y-0.5 overflow-hidden">
+                        <div className="text-sm font-serif text-[#D7C9B8] truncate">{firstLine}</div>
+                        <div className="text-[11px] font-mono text-[#767E79]">{note.date} · {note.tag || '随记'}</div>
+                      </div>
+                      <button
+                        onClick={() => handleDeleteNote(note.id)}
+                        className="text-xs font-sans text-[#767E79] hover:text-[#E8B48C] hover:bg-[#E8B48C]/10 px-2.5 py-1 rounded-lg border border-[rgba(215,201,184,0.1)] transition-colors focus:outline-none shrink-0"
+                      >
+                        ✕ 删除
+                      </button>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* 密码加密与生成底栏 */}
+        <div className="inner-card-soft p-6 flex flex-col sm:flex-row gap-3">
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="输入解密密码以重新加密生成整个数据库..."
+            className="flex-1 px-4 py-3 rounded-xl bg-[#0E1316]/60 border border-[rgba(215,201,184,0.15)] text-xs font-sans text-[#D7C9B8] placeholder-[#767E79] focus:outline-none focus:border-[#E8B48C]"
+          />
+          <button
+            onClick={handleGenerateCipher}
+            className="px-6 py-3 rounded-xl bg-[#E8B48C] text-[#0E1316] text-xs font-medium hover:bg-[#F3C49E] transition-colors focus:outline-none shrink-0"
+          >
+            生成并应用新密文包
+          </button>
         </div>
 
         {/* 密文输出 */}
@@ -233,7 +338,7 @@ export const InnerStudio: React.FC<InnerStudioProps> = ({
               {generatedCipher}
             </div>
             <p className="text-xs text-[#767E79] font-serif">
-              提示：将上述密文复制并替换 <code>content/secret.enc</code> 的内容提交，即可永久保存更新。
+              提示：将上述密文复制并替换 <code>content/secret.enc</code> 文件的内容提交，即可永久保存删除与更新。
             </p>
           </div>
         )}
