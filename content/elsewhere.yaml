@@ -1,0 +1,19 @@
+- name: "GitHub"
+  desc: "开源代码、实验性小组件与主题仓库"
+  link: "https://github.com"
+  tag: "Code"
+
+- name: "Unsplash / 500px"
+  desc: "旅行胶片与日常风景的高清摄影图集"
+  link: "https://unsplash.com"
+  tag: "Photo"
+
+- name: "Substack / Newsletter"
+  desc: "每月一封的慢阅读周刊《风栖手记》"
+  link: "https://substack.com"
+  tag: "Journal"
+
+- name: "Email 联系"
+  desc: "hello@fengqi.space —— 欢迎任何关于设计、技术或生活的交流"
+  link: "mailto:hello@fengqi.space"
+  tag: "Contact"

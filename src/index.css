@@ -1,0 +1,115 @@
+@import "tailwindcss";
+
+:root {
+  /* 需求规范色彩定义 */
+  --color-fog-white: #F3F6F4;       /* 雾白 - 主背景底色 */
+  --color-mist-light: #E6EDEB;      /* 浅雾青 - 容器与次级渐变 */
+  --color-mist: #C7D9D6;            /* 雾青 - 装饰微色与柔和边框 */
+  --color-slate-deep: #2F4B4D;       /* 黛青 - 主文字与主线条 */
+  --color-slate-muted: #5C7A7C;      /* 黛青淡化 - 次级正文 */
+  --color-slate-faint: #8EABA8;      /* 黛青极淡 - 元信息/时间 */
+  --color-mint: #A7CFC3;            /* 薄荷绿 - 自然生机点缀 */
+  --color-peach: #F6DCCB;           /* 暖桃 - 微点缀色 */
+  --color-peach-light: #FBF2EB;     /* 浅杏粉 */
+  
+  /* 字体家族定义 */
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+  --font-serif: 'Noto Serif SC', 'LXGW WenKai Screen', 'LXGW WenKai', 'Source Han Serif SC', 'Songti SC', SimSun, serif;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-sans);
+  background-color: var(--color-fog-white);
+  color: var(--color-slate-deep);
+  overflow-x: hidden;
+  position: relative;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* 柔和水彩雾感背景底纹 */
+.misty-background {
+  background-color: #F3F6F4;
+  background-image: 
+    radial-gradient(ellipse at 85% 15%, rgba(199, 217, 214, 0.45) 0%, transparent 60%),
+    radial-gradient(ellipse at 15% 80%, rgba(230, 237, 235, 0.7) 0%, transparent 65%),
+    radial-gradient(circle at 60% 70%, rgba(167, 207, 195, 0.18) 0%, transparent 50%),
+    radial-gradient(circle at 40% 30%, rgba(246, 220, 203, 0.12) 0%, transparent 40%);
+  background-attachment: fixed;
+}
+
+/* 中文文气排版专用类 */
+.font-editorial {
+  font-family: var(--font-serif);
+}
+
+.font-ui {
+  font-family: var(--font-sans);
+}
+
+/* 文章阅读行距与间距规范 (行高 1.85 ~ 2.0) */
+.editorial-prose {
+  font-family: var(--font-serif);
+  font-size: 1.0625rem;
+  line-height: 1.95;
+  color: #2F4B4D;
+  letter-spacing: 0.02em;
+}
+
+.editorial-prose p {
+  margin-bottom: 1.85rem;
+}
+
+.editorial-prose p:last-child {
+  margin-bottom: 0;
+}
+
+.editorial-prose blockquote {
+  border-left: 2px solid #A7CFC3;
+  padding-left: 1.25rem;
+  margin: 2rem 0;
+  color: #5C7A7C;
+  font-style: normal;
+  background: rgba(230, 237, 235, 0.35);
+  padding: 1rem 1.25rem;
+  border-radius: 0 0.5rem 0.5rem 0;
+}
+
+/* 自定义极轻滚动条 */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(199, 217, 214, 0.6);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(167, 207, 195, 0.8);
+}
+
+/* 动效缓动 */
+.transition-editorial {
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* 柔和微边框与阴影 */
+.border-subtle {
+  border-color: rgba(199, 217, 214, 0.5);
+}
+
+.card-soft {
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(199, 217, 214, 0.5);
+  border-radius: 12px;
+}

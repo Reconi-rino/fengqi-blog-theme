@@ -1,0 +1,35 @@
+- id: "proj-1"
+  title: "fengqi Theme"
+  description: "安静柔和、带微互动背景生态的个人刊物式博客主题系统。"
+  year: "2026"
+  category: "Design & Code"
+  tags:
+    - "React"
+    - "TypeScript"
+    - "Tailwind"
+    - "Canvas"
+  github: "https://github.com"
+  stars: 128
+
+- id: "proj-2"
+  title: "Whisper Note"
+  description: "极简无干扰的个人灵感闪念记录小工具，支持本地离线存储与 Markdown 导出。"
+  year: "2025"
+  category: "Product"
+  tags:
+    - "Tauri"
+    - "Rust"
+    - "Svelte"
+  github: "https://github.com"
+  stars: 86
+
+- id: "proj-3"
+  title: "Misty Palette"
+  description: "低饱和东方色彩提取工具，专为静音与阅读场景优化的调色方案生成器。"
+  year: "2025"
+  category: "Design Tool"
+  tags:
+    - "Web Canvas"
+    - "Color Science"
+  github: "https://github.com"
+  stars: 64

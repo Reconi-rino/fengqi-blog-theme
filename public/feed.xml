@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>fengqi. — somewhere, still awake.</title>
+    <link>https://fengqi.space</link>
+    <description>一个安静、柔和、带微互动的个人刊物式博客空间</description>
+    <language>zh-CN</language>
+    <atom:link href="https://fengqi.space/feed.xml" rel="self" type="application/rss+xml"/>
+    <managingEditor>风栖</managingEditor>
+    <webMaster>风栖</webMaster>
+    <item>
+      <title>Markdown 增强排版演示：代码、Callout、Mermaid 与 HTML</title>
+      <link>https://fengqi.space/#writing/markdown-features-demo</link>
+      <guid isPermaLink="true">https://fengqi.space/#writing/markdown-features-demo</guid>
+      <pubDate>Mon, 18 May 2026 00:00:00 GMT</pubDate>
+      <category>tech</category>
+      <description>探索本主题所支持的丰富富文本扩展能力。</description>
+    </item>
+    <item>
+      <title>在风里记录练习</title>
+      <link>https://fengqi.space/#writing/writing-in-the-wind</link>
+      <guid isPermaLink="true">https://fengqi.space/#writing/writing-in-the-wind</guid>
+      <pubDate>Tue, 12 May 2026 00:00:00 GMT</pubDate>
+      <category>essay</category>
+      <description>有时候我会在风很轻的傍晚，带着小本子去公园坐一会儿。不为记录什么重要的事，只是让思绪慢慢沉下来，把当天的感受写成几行字。</description>
+    </item>
+    <item>
+      <title>静态站点：从想法到上线</title>
+      <link>https://fengqi.space/#writing/static-site-from-idea-to-launch</link>
+      <guid isPermaLink="true">https://fengqi.space/#writing/static-site-from-idea-to-launch</guid>
+      <pubDate>Wed, 06 May 2026 00:00:00 GMT</pubDate>
+      <category>tech</category>
+      <description>记录一次搭建个人网站的过程与思考。去除冗余的卡片与商业化模板，回归文本与留白。</description>
+    </item>
+  </channel>
+</rss>

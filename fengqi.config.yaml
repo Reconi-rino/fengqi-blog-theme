@@ -1,0 +1,58 @@
+# ==============================================================================
+# fengqi 个人博客主题 ｜ 全局站点配置文件 (fengqi.config.yaml)
+# 修改此文件即可自定义全站所有基础信息、标语、板块与社交链接，无需修改代码。
+# ==============================================================================
+
+site:
+  title: "fengqi."
+  author: "风栖"
+  subtitle_en: "somewhere, still awake."
+  subtitle_cn: "在字里行间，和世界轻轻相遇。"
+  description: "一个安静、柔和、带微互动的个人刊物式博客空间"
+  footer_text: "quiet personal editorial space"
+  copyright_year: "2026"
+
+# 首页首屏与 About 模块配置
+profile:
+  bio:
+    - "这里记录一些关于生活、设计与思考的片段。"
+    - "喜欢安静地观察，也喜欢温柔地表达。"
+  quote: "“清风徐来，水波不兴。记录一些想法与日常。愿你在此，停留片刻。”"
+  stats:
+    articles: 286
+    photos: 128
+    likes: 67
+    topics: 3
+
+# 一级核心板块定义（对应 Expanding Index 展开式索引与固定符号）
+sections:
+  - id: "writing"
+    symbol: "○"
+    enName: "Writing"
+    cnName: "书写与记录"
+    desc: "文字记录、读书笔记、想法与感受"
+    count: 28
+  - id: "photography"
+    symbol: "□"
+    enName: "Photography"
+    cnName: "影像拾集"
+    desc: "影像拾集、风景与生活碎片"
+    count: 14
+  - id: "projects"
+    symbol: "+"
+    enName: "Projects"
+    cnName: "项目与实验"
+    desc: "一些小项目与实验性尝试"
+    count: 7
+  - id: "notes"
+    symbol: "~"
+    enName: "Notes"
+    cnName: "随记与想法"
+    desc: "随记与摘录，未完成的思绪"
+    count: 35
+
+# 动效与微生态行为偏好
+motion:
+  default_reduced: false      # 是否默认降低背景微动态
+  repulsion_radius: 110       # 鼠标扰动斥力半径 (px)
+  max_ambient_particles: 8    # 同屏背景微元素最大数量 (4~10)
