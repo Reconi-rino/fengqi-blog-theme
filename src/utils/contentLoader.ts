@@ -5,6 +5,7 @@ export interface SiteConfig {
   site: {
     title: string;
     author: string;
+    url?: string;
     subtitle_en: string;
     subtitle_cn: string;
     description: string;

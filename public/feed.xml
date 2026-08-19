@@ -2,35 +2,279 @@
 <rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>fengqi. — somewhere, still awake.</title>
-    <link>https://fengqi.space</link>
+    <link>/</link>
     <description>一个安静、柔和、带微互动的个人刊物式博客空间</description>
     <language>zh-CN</language>
-    <atom:link href="https://fengqi.space/feed.xml" rel="self" type="application/rss+xml"/>
+    <lastBuildDate>Wed, 19 Aug 2026 05:01:28 GMT</lastBuildDate>
+    <atom:link href="/feed.xml" rel="self" type="application/rss+xml"/>
     <managingEditor>风栖</managingEditor>
     <webMaster>风栖</webMaster>
     <item>
       <title>Markdown 增强排版演示：代码、Callout、Mermaid 与 HTML</title>
-      <link>https://fengqi.space/#writing/markdown-features-demo</link>
-      <guid isPermaLink="true">https://fengqi.space/#writing/markdown-features-demo</guid>
+      <link>/#writing/07-markdown-features-demo</link>
+      <guid isPermaLink="true">/#writing/07-markdown-features-demo</guid>
       <pubDate>Mon, 18 May 2026 00:00:00 GMT</pubDate>
       <category>tech</category>
       <description>探索本主题所支持的丰富富文本扩展能力。</description>
+      <content:encoded><![CDATA[
+在这个主题中，Markdown 不仅支持基础的纯文本排版，还完整支持**代码语法高亮**、**GitHub 风格 Callout 提示框**、**Mermaid 图表渲染** 以及 **安全 HTML 嵌入**。
+
+---
+
+### 1. 自定义 Callout 提示框 (Note / Tip / Important / Warning / Caution)
+
+> [!NOTE]
+> **这是一条 NOTE 提示框**  
+> 浅薄荷绿背景，适合用于补充说明、背景知识或轻量提示。
+
+> [!TIP]
+> **这是一条 TIP 技巧提示**  
+> 用于分享效率技巧、快捷键推荐或最佳实践。
+
+> [!IMPORTANT]
+> **这是一条 IMPORTANT 重要信息**  
+> 淡雾青背景，用于强调关键注意事项。
+
+> [!WARNING]
+> **这是一条 WARNING 警告框**  
+> 暖桃色调，温和提醒可能的陷阱或潜在问题。
+
+> [!CAUTION]
+> **这是一条 CAUTION 危险警告**  
+> 明确提示高风险或不可逆操作。
+
+---
+
+### 2. 代码块高亮与复制 (Code Blocks)
+
+支持带有语言标识的语法高亮，右上方带有专属一键复制按钮与柔和边框：
+
+```typescript
+import { useState, useEffect } from 'react';
+
+// 计算两点之间的欧几里得距离与斥力向量
+export function calculateRepulsion(
+  px: number, 
+  py: number, 
+  mx: number, 
+  my: number, 
+  radius: number = 110
+) {
+  const dx = px - mx;
+  const dy = py - my;
+  const dist = Math.sqrt(dx * dx + dy * dy);
+
+  if (dist < radius && dist > 0) {
+    const force = (1 - dist / radius) * 1.8;
+    return { fx: (dx / dist) * force, fy: (dy / dist) * force };
+  }
+  return { fx: 0, fy: 0 };
+}
+```
+
+```css
+/* 自定义低饱和调色板变量 */
+:root {
+  --color-fog-white: #F3F6F4;
+  --color-slate-deep: #2F4B4D;
+  --color-mint: #A7CFC3;
+  --color-peach: #F6DCCB;
+}
+```
+
+---
+
+### 3. Mermaid 架构图与流程图 (Mermaid Diagrams)
+
+直接书写 ` ```mermaid ` 代码块，即可由渲染引擎自动转换为符合主题配色的矢量流程图：
+
+```mermaid
+graph LR
+    A[用户编辑 fengqi.config.yaml] --> B[content/*.md 文章库]
+    B --> C[Vite 动态内容装载器]
+    C --> D[MarkdownRenderer 渲染引擎]
+    D --> E[优雅个人博客展示]
+```
+
+```mermaid
+sequenceDiagram
+    participant U as 访客
+    participant H as 首页 (Hero)
+    participant I as 展开式索引 (Index)
+    participant A as 归档 (Archive)
+    
+    U->>H: 访问站点
+    U->>H: 点击右上角 "+"
+    H->>I: 页面自体形变展开
+    U->>I: 点击 "○ Writing"
+    I->>A: 进入文章列表并悬停预览
+```
+
+---
+
+### 4. 原生 HTML 嵌入 (HTML Embeds)
+
+你可以直接在 Markdown 中嵌入定制的 HTML 结构，比如音频播放器、进度条或多列网格：
+
+<div style="background: rgba(230, 237, 235, 0.6); padding: 16px 20px; border-radius: 10px; border: 1px dashed #A7CFC3; margin: 20px 0;">
+  <span style="font-weight: 500; color: #2F4B4D;">✨ 这是一个内嵌的 HTML 容器</span>
+  <p style="margin: 6px 0 0 0; font-size: 14px; color: #5C7A7C;">
+    你可以在这里自由嵌入音频 <code>&lt;audio&gt;</code>、视频 <code>&lt;video&gt;</code>、外链卡片或者任何自定义标签。
+  </p>
+</div>
+
+---
+
+### 5. 标准 GFM 表格与任务清单 (GFM Tables & Task Lists)
+
+| 功能特性 | 支持状态 | 说明 |
+| :--- | :---: | :--- |
+| **代码高亮** | ✅ 支持 | 带语言标签与一键复制 |
+| **Callout 提示框** | ✅ 支持 | Note / Tip / Warning / Caution / Important |
+| **Mermaid 图表** | ✅ 支持 | 流程图、时序图、甘特图等 |
+| **HTML 嵌入** | ✅ 支持 | 安全过滤与自定义组件嵌入 |
+| **数学公式** | ✅ 支持 | LaTeX 内联与块级公式 |
+
+- [x] 搭建好全局 YAML 配置文件
+- [x] 支持在 `content/posts/` 中随意添加 `.md` 文章
+- [x] 在右侧享受即时 Hover 聚焦预览
+]]></content:encoded>
     </item>
     <item>
       <title>在风里记录练习</title>
-      <link>https://fengqi.space/#writing/writing-in-the-wind</link>
-      <guid isPermaLink="true">https://fengqi.space/#writing/writing-in-the-wind</guid>
+      <link>/#writing/01-writing-in-the-wind</link>
+      <guid isPermaLink="true">/#writing/01-writing-in-the-wind</guid>
       <pubDate>Tue, 12 May 2026 00:00:00 GMT</pubDate>
       <category>essay</category>
-      <description>有时候我会在风很轻的傍晚，带着小本子去公园坐一会儿。不为记录什么重要的事，只是让思绪慢慢沉下来，把当天的感受写成几行字。</description>
+      <description>风不是答案，只是让我慢下来的理由。</description>
+      <content:encoded><![CDATA[
+有时候我会在风很轻的傍晚，带着小本子去公园坐一会儿。不为记录什么重要的事，只是让思绪慢慢沉下来，把当天的感受写成几行字。
+
+> [!NOTE]
+> 记录的意义不在于结论，而在于记录当下流过心底的微风。
+
+风吹过树梢的声音，像是一场微型的海潮。远处有小狗在草坪上追逐，近处有落叶打着旋儿落在膝盖上。在这种时刻，时间似乎流逝得格外缓慢。
+
+我们习惯了在各种屏幕和即时通知之间切换，大脑总处在一触即发的戒备状态中。但当纸面摊开，墨水慢慢渗入纤维，那种踏实的重力感又回来了。
+
+写作于我而言，从来不是输出观点的武器，而是一扇向内观察的窗户。风不是答案，它只是适时掠过，提醒我呼吸，提醒我停留。
+]]></content:encoded>
     </item>
     <item>
       <title>静态站点：从想法到上线</title>
-      <link>https://fengqi.space/#writing/static-site-from-idea-to-launch</link>
-      <guid isPermaLink="true">https://fengqi.space/#writing/static-site-from-idea-to-launch</guid>
+      <link>/#writing/02-static-site-launch</link>
+      <guid isPermaLink="true">/#writing/02-static-site-launch</guid>
       <pubDate>Wed, 06 May 2026 00:00:00 GMT</pubDate>
       <category>tech</category>
-      <description>记录一次搭建个人网站的过程与思考。去除冗余的卡片与商业化模板，回归文本与留白。</description>
+      <description>记录一次搭建个人网站的过程与思考。</description>
+      <content:encoded><![CDATA[
+建站最初的动力，来自对目前主流“模板化”博客的疲惫。满屏的浮夸阴影、居中的大号 Hero Banner、五颜六色的徽章，让阅读本身变得充满侵略性。
+
+我想要的很简单：一个安静的、左侧锚定的、有留白和微弱呼吸感的个人刊物空间。
+
+> [!TIP]
+> 优秀的个人博客往往是减法做到极致的结果。去除所有非必要组件，把舞台完整留给文字。
+
+在这套主题的设计中，我将主要注意力放在以下三件事上：
+
+```mermaid
+graph TD
+    A[设计目标] --> B[低饱和调色板: 雾白 / 浅雾青 / 黛青]
+    A --> C[Expanding Index: 原位平滑形变]
+    A --> D[微生态 Canvas: 物理斥力扰动]
+```
+
+1. **雾青与黛青的低饱和调色板**：模仿清晨带有露水与雾气的空气感；
+2. **原位自体展开的索引系统（Expanding Index）**：取代生硬的抽屉遮罩；
+3. **轻量级的背景生态微交互**：让页面不是静态的死物，而是偶尔有微风吹拂的庭院。
+]]></content:encoded>
+    </item>
+    <item>
+      <title>春日收集夹</title>
+      <link>/#writing/03-spring-collection</link>
+      <guid isPermaLink="true">/#writing/03-spring-collection</guid>
+      <pubDate>Tue, 28 Apr 2026 00:00:00 GMT</pubDate>
+      <category>note</category>
+      <description>一些当下的片段，像落在纸上的小光点。</description>
+      <content:encoded><![CDATA[
+四月下旬的阳光已经有了初夏的温度，但风依旧带着微凉的薄荷味。
+
+把这几周收集到的几个瞬间记在这里：
+
+- 巷口拐角处盛开的野蔷薇，香气淡淡地弥漫了半条街；
+- 下午三点落在木地板上的斜斜光斑，猫咪追逐着浮动的微尘；
+- 重新拾起手冲咖啡的研磨仪，听着豆子碎裂清脆的声音，心神安定。
+
+> [!NOTE]
+> 收集生活的碎片，不是为了对抗遗忘，而是为了在平淡的日子里确认自己真实地存在过。
+]]></content:encoded>
+    </item>
+    <item>
+      <title>关于专注力的温柔训练</title>
+      <link>/#writing/04-focus-training</link>
+      <guid isPermaLink="true">/#writing/04-focus-training</guid>
+      <pubDate>Sun, 12 Apr 2026 00:00:00 GMT</pubDate>
+      <category>essay</category>
+      <description>不是对抗分心，而是和注意力做朋友。</description>
+      <content:encoded><![CDATA[
+过去我总觉得，专注是一种必须紧绷神经才能维持的意志力搏斗。一旦被手机震动打断，就会陷入深深的自责。
+
+后来读到一行字：
+
+> “水流经石头时，从不与石头争辩，只是绕过去。”
+
+我们对待自己的注意力也是如此。察觉到走神的时候，不需要责备自己，只要像对待一只好奇跑开的小猫一样，轻轻把它抱回当前的事情上就好。
+
+> [!TIP]
+> 试着把番茄钟设定为 20 分钟而不是 45 分钟，短而温和的专注更容易建立正向反馈。
+]]></content:encoded>
+    </item>
+    <item>
+      <title>我的写作环境配置清单</title>
+      <link>/#writing/05-writing-environment</link>
+      <guid isPermaLink="true">/#writing/05-writing-environment</guid>
+      <pubDate>Mon, 30 Mar 2026 00:00:00 GMT</pubDate>
+      <category>tech</category>
+      <description>从输入法到编辑器，提升写作幸福感的 7 个小设置。</description>
+      <content:encoded><![CDATA[
+工欲善其事，必先利其器。但这里的“器”，重点不在功能多么繁复，而在是否能创造一个让人愿意静坐写字的“场”。
+
+```yaml
+# 写作环境推荐配置
+editor:
+  font_family: "Noto Serif SC"
+  font_size: 17px
+  line_height: 1.95
+  letter_spacing: "0.02em"
+  background_color: "#F3F6F4"
+  text_color: "#2F4B4D"
+```
+
+1. **字体选用**：正文思源宋体 / 霞鹜文楷，字号 17px，行高 1.95，字间距微微加宽 0.02em；
+2. **背景色调**：使用低饱和度的浅雾青 `#F3F6F4` 配合黛青文字 `#2F4B4D`，柔和不刺眼；
+3. **编辑器全屏无状态栏**：隐藏所有多余的边栏与统计徽章；
+4. **静音键盘**：选用轻压力克数的静音轴，敲击时宛如落雨。
+]]></content:encoded>
+    </item>
+    <item>
+      <title>在安静处，与自己重逢</title>
+      <link>/#writing/06-quiet-reunion</link>
+      <guid isPermaLink="true">/#writing/06-quiet-reunion</guid>
+      <pubDate>Sun, 15 Feb 2026 00:00:00 GMT</pubDate>
+      <category>essay</category>
+      <description>有些日子，外界的声音太多，我们便容易丢失自己。</description>
+      <content:encoded><![CDATA[
+有些日子，外界的声音太多，我们便容易丢失自己。于是，我开始学会退后半步，把注意力放回到呼吸、到感受、到那些微小而真实的瞬间。
+
+早晨的光在窗帘边缘慢慢铺开，空气里有一丝凉意。煮一杯温水，翻开一本喜欢的书，让时间变得缓慢而柔软。
+
+> [!NOTE]
+> 写作对我而言，是一次次温柔的整理。把混乱的念头写下来，让它们在文字里落地、停留，也被理解。
+
+我们不必成为很厉害的大人，也不必一直向前冲刺。允许自己偶尔停下来，好好吃饭，好好睡觉，好好生活。
+
+在安静处，与自己重逢。
+]]></content:encoded>
     </item>
   </channel>
 </rss>

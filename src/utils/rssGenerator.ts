@@ -1,6 +1,19 @@
 import { siteConfig, allArticles } from './contentLoader';
 
-export function generateRssXml(siteUrl: string = 'https://fengqi.space'): string {
+export function getDynamicSiteUrl(): string {
+  if (siteConfig.site?.url) {
+    return siteConfig.site.url.replace(/\/$/, '');
+  }
+  if (typeof window !== 'undefined') {
+    const basePath = import.meta.env.BASE_URL || '/';
+    const normalizedBase = basePath.endsWith('/') && basePath.length > 1 ? basePath.slice(0, -1) : (basePath === '/' ? '' : basePath);
+    return `${window.location.origin}${normalizedBase}`;
+  }
+  return '';
+}
+
+export function generateRssXml(customSiteUrl?: string): string {
+  const siteUrl = customSiteUrl || getDynamicSiteUrl();
   const now = new Date().toUTCString();
   const title = siteConfig.site.title || 'fengqi.';
   const author = siteConfig.site.author || '风栖';
@@ -38,7 +51,7 @@ export function generateRssXml(siteUrl: string = 'https://fengqi.space'): string
 <rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>${title} — ${siteConfig.site.subtitle_en}</title>
-    <link>${siteUrl}</link>
+    <link>${siteUrl || '/'}</link>
     <description>${description}</description>
     <language>zh-CN</language>
     <lastBuildDate>${now}</lastBuildDate>

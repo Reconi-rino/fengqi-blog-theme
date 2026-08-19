@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { LeafMotif, PeachHeartMotif } from './Motifs';
-import { generateRssXml } from '../utils/rssGenerator';
+import { generateRssXml, getDynamicSiteUrl } from '../utils/rssGenerator';
 
 interface RssModalProps {
   isOpen: boolean;
@@ -11,9 +11,9 @@ interface RssModalProps {
 
 export const RssModal: React.FC<RssModalProps> = ({ isOpen, onClose, onShowToast }) => {
   const [showRaw, setShowRaw] = useState(false);
-  const currentOrigin = typeof window !== 'undefined' ? window.location.origin : 'https://fengqi.space';
-  const feedUrl = `${currentOrigin}/feed.xml`;
-  const rssXmlContent = generateRssXml(currentOrigin);
+  const currentBaseUrl = getDynamicSiteUrl();
+  const feedUrl = `${currentBaseUrl}/feed.xml`;
+  const rssXmlContent = generateRssXml(currentBaseUrl);
 
   const handleCopyLink = () => {
     navigator.clipboard?.writeText(feedUrl);

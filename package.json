@@ -7,7 +7,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build": "tsc && vite build && node scripts/generate-rss.js",
+    "rss": "node scripts/generate-rss.js",
     "preview": "vite preview",
     "secret": "node scripts/encrypt.js"
   },

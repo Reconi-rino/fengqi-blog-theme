@@ -6,6 +6,7 @@
 site:
   title: "fengqi."
   author: "风栖"
+  url: ""                       # 自定义部署域名 (如: https://example.com 或 https://user.github.io/repo)。留空则自动根据实际访问域名动态适配
   subtitle_en: "somewhere, still awake."
   subtitle_cn: "在字里行间，和世界轻轻相遇。"
   description: "一个安静、柔和、带微互动的个人刊物式博客空间"
