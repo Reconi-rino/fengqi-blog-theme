@@ -178,9 +178,9 @@ function encrypt(dataObj, password) {
 
   const cipher = crypto.createCipheriv('aes-256-gcm', key, iv);
   const encrypted = Buffer.concat([cipher.update(text, 'utf8'), cipher.final()]);
-  const tag = cipher.getAuthTag();
+  const authTag = cipher.getAuthTag();
 
-  const combined = Buffer.concat([salt, iv, encrypted, tag]);
+  const combined = Buffer.concat([salt, iv, encrypted, authTag]);
   return combined.toString('base64');
 }
 
