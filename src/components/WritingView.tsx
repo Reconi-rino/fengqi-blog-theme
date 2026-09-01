@@ -60,7 +60,7 @@ export const WritingView: React.FC<WritingViewProps> = ({ onSelectArticle }) => 
 
       {/* 主布局：左侧文章列表 + 右侧聚焦预览卡 */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
-        {/* 左侧：列表取代卡片 */}
+        {/* 左侧：列表 */}
         <div className="lg:col-span-7 space-y-12">
           {years.map((year) => {
             const yearArticles = filteredArticles.filter((a) => a.year === year);
@@ -107,16 +107,27 @@ export const WritingView: React.FC<WritingViewProps> = ({ onSelectArticle }) => 
                             </h3>
                           </div>
 
-                          {/* 右部：阅读时间 */}
-                          <span className="font-sans text-xs text-[#8EABA8] shrink-0 sm:text-right">
-                            {art.readTime}
-                          </span>
+                          {/* 右部：标签与阅读时间 */}
+                          <div className="flex items-center gap-2 shrink-0 sm:text-right">
+                            {art.tags && art.tags.length > 0 && (
+                              <div className="hidden md:flex items-center gap-1">
+                                {art.tags.slice(0, 2).map((t) => (
+                                  <span key={t} className="text-[10px] text-[#8EABA8] bg-white/70 px-1.5 py-0.5 rounded">
+                                    #{t}
+                                  </span>
+                                ))}
+                              </div>
+                            )}
+                            <span className="font-sans text-xs text-[#8EABA8]">
+                              {art.readTime}
+                            </span>
+                          </div>
                         </div>
 
                         {/* 单行简短摘要 */}
-                        {art.subtitle && (
+                        {art.excerpt && (
                           <p className="mt-1.5 pl-14 text-xs text-[#5C7A7C]/80 font-serif line-clamp-1">
-                            {art.subtitle}
+                            {art.excerpt}
                           </p>
                         )}
                       </div>
@@ -128,7 +139,7 @@ export const WritingView: React.FC<WritingViewProps> = ({ onSelectArticle }) => 
           })}
         </div>
 
-        {/* 右侧：聚焦预览卡 (快速响应、跟手极速切换) */}
+        {/* 右侧：聚焦预览卡 */}
         <div className="hidden lg:block lg:col-span-5 sticky top-36">
           <div className="card-soft p-7 border border-[#C7D9D6]/60 shadow-xs relative overflow-hidden min-h-[380px] flex flex-col justify-between">
             <AnimatePresence mode="popLayout">
@@ -148,12 +159,24 @@ export const WritingView: React.FC<WritingViewProps> = ({ onSelectArticle }) => 
                         <h3 className="font-serif text-xl font-normal text-[#2F4B4D] leading-snug">
                           {hoveredArticle.title}
                         </h3>
-                        <div className="mt-1 flex items-center gap-2 text-xs font-sans text-[#8EABA8]">
+                        <div className="mt-1 flex flex-wrap items-center gap-2 text-xs font-sans text-[#8EABA8]">
                           <span>{hoveredArticle.date}</span>
                           <span>•</span>
                           <span className="capitalize">{hoveredArticle.category}</span>
                           <span>•</span>
                           <span>{hoveredArticle.readTime}</span>
+                          {hoveredArticle.tags && hoveredArticle.tags.length > 0 && (
+                            <>
+                              <span>•</span>
+                              <div className="flex gap-1">
+                                {hoveredArticle.tags.map(t => (
+                                  <span key={t} className="text-[10px] text-[#5C7A7C] bg-[#E6EDEB] px-1.5 py-0.2 rounded">
+                                    #{t}
+                                  </span>
+                                ))}
+                              </div>
+                            </>
+                          )}
                         </div>
                       </div>
                     </div>

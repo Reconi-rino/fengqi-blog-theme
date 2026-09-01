@@ -7,8 +7,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build && node scripts/generate-rss.js",
+    "build": "tsc && vite build && node scripts/generate-rss.js && node scripts/generate-routes.js",
     "rss": "node scripts/generate-rss.js",
+    "routes": "node scripts/generate-routes.js",
     "preview": "vite preview",
     "secret": "node scripts/encrypt.js"
   },
@@ -25,7 +26,8 @@
     "react-markdown": "^10.1.0",
     "rehype-raw": "^7.0.0",
     "remark-gfm": "^4.0.1",
-    "tailwind-merge": "^3.0.1"
+    "tailwind-merge": "^3.0.1",
+    "wouter": "^3.10.0"
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.0.6",

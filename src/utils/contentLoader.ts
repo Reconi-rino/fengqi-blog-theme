@@ -110,6 +110,18 @@ for (const [path, raw] of Object.entries(postFiles)) {
     .map(s => s.trim())
     .find(s => s && !s.startsWith('#') && !s.startsWith('>') && !s.startsWith('-') && !s.startsWith('```')) || '';
 
+  // 解析标签 tags
+  let parsedTags: string[] = [];
+  if (Array.isArray(frontmatter.tags)) {
+    parsedTags = frontmatter.tags.map(t => String(t).trim()).filter(Boolean);
+  } else if (typeof frontmatter.tags === 'string') {
+    parsedTags = frontmatter.tags.split(/[,，、]/).map(t => t.trim()).filter(Boolean);
+  }
+
+  // 动态预估阅读时间 (中文约 350 字/分)
+  const cleanTextLength = content.replace(/[#*`~>-\s\n\r]/g, '').length;
+  const estimatedReadTime = `${Math.max(1, Math.ceil(cleanTextLength / 350))} min read`;
+
   loadedArticles.push({
     id: frontmatter.id || slug,
     slug: frontmatter.slug || slug,
@@ -119,11 +131,11 @@ for (const [path, raw] of Object.entries(postFiles)) {
     shortDate: frontmatter.shortDate || (frontmatter.date ? String(frontmatter.date).slice(5) : '01.01'),
     year: frontmatter.year || (frontmatter.date ? String(frontmatter.date).slice(0, 4) : '2026'),
     category: (frontmatter.category as ArticleCategory) || 'essay',
-    readTime: frontmatter.readTime || '5 min read',
+    tags: parsedTags,
+    readTime: frontmatter.readTime || estimatedReadTime,
     excerpt: frontmatter.excerpt || firstParagraph || '暂无摘要',
     content: [content], // 保存完整 Markdown 内容
     coverImage: frontmatter.coverImage,
-    likes: frontmatter.likes || 12,
   });
 }
 

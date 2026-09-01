@@ -8,24 +8,22 @@ interface ArticleViewProps {
   article: Article;
   onBackToWriting: () => void;
   onShowToast: (msg: string) => void;
+  onTriggerBreeze?: () => void;
 }
 
 export const ArticleView: React.FC<ArticleViewProps> = ({
   article,
   onBackToWriting,
   onShowToast,
+  onTriggerBreeze,
 }) => {
-  const [likes, setLikes] = useState(article.likes);
-  const [hasLiked, setHasLiked] = useState(false);
+  const [hasHearted, setHasHearted] = useState(false);
 
-  const handleLike = () => {
-    if (!hasLiked) {
-      setLikes((prev) => prev + 1);
-      setHasLiked(true);
-      onShowToast('感谢你的喜欢 ♡');
-    } else {
-      setLikes((prev) => prev - 1);
-      setHasLiked(false);
+  const handleHeart = () => {
+    setHasHearted(!hasHearted);
+    if (!hasHearted) {
+      onShowToast('心意已记下，起了一阵微风 🍃');
+      if (onTriggerBreeze) onTriggerBreeze();
     }
   };
 
@@ -75,13 +73,30 @@ export const ArticleView: React.FC<ArticleViewProps> = ({
           <LeafMotif size={24} color="#A7CFC3" className="mt-2 shrink-0 opacity-80" />
         </div>
 
-        {/* 元信息 */}
-        <div className="mt-4 flex items-center gap-3 text-xs font-sans text-[#8EABA8]">
+        {/* 元信息与标签 */}
+        <div className="mt-4 flex flex-wrap items-center gap-3 text-xs font-sans text-[#8EABA8]">
           <span>{article.date}</span>
           <span>·</span>
           <span>约 {article.readTime}</span>
           <span>·</span>
           <span className="capitalize">{article.category}</span>
+
+          {/* 标签 Tag 胶囊 */}
+          {article.tags && article.tags.length > 0 && (
+            <>
+              <span>·</span>
+              <div className="flex flex-wrap items-center gap-1.5">
+                {article.tags.map((t) => (
+                  <span
+                    key={t}
+                    className="px-2 py-0.5 rounded-md bg-[#E6EDEB] text-[#5C7A7C] text-[11px]"
+                  >
+                    #{t}
+                  </span>
+                ))}
+              </div>
+            </>
+          )}
         </div>
       </div>
 
@@ -110,17 +125,17 @@ export const ArticleView: React.FC<ArticleViewProps> = ({
       {/* 底部操作区 */}
       <div className="max-w-[740px] mx-auto mt-16 pt-10 border-t border-[#C7D9D6]/40">
         <div className="flex flex-col sm:flex-row items-center justify-between gap-6">
-          {/* 喜欢按钮 */}
+          {/* 心意留存按钮 */}
           <button
-            onClick={handleLike}
+            onClick={handleHeart}
             className={`px-4 py-2 rounded-full border transition-all duration-300 flex items-center gap-2 text-xs font-sans focus:outline-none ${
-              hasLiked
+              hasHearted
                 ? 'bg-[#F6DCCB]/60 border-[#F6DCCB] text-[#2F4B4D] scale-105 shadow-2xs'
                 : 'bg-white/50 border-[#C7D9D6] text-[#5C7A7C] hover:text-[#2F4B4D] hover:border-[#A7CFC3] hover:bg-white'
             }`}
           >
-            <PeachHeartMotif size={14} color="#F6DCCB" filled={hasLiked} />
-            <span>喜欢这篇文章 ({likes})</span>
+            <PeachHeartMotif size={14} color="#F6DCCB" filled={hasHearted} />
+            <span>{hasHearted ? '已存心意 ♡' : '寄托心意'}</span>
           </button>
 
           {/* 分享与返回操作 */}

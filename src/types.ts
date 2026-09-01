@@ -20,11 +20,12 @@ export interface Article {
   shortDate: string; // e.g. "05.12"
   year: string; // e.g. "2026"
   category: ArticleCategory;
+  tags?: string[]; // 标签体系，例如 ["C", "嵌入式", "学习笔记"]
   readTime: string; // e.g. "8 min read"
   excerpt: string;
   content: string[];
   coverImage?: string;
-  likes: number;
+  likes?: number;
 }
 
 export interface Photo {

@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { Router, Route, Switch, useLocation, useParams } from 'wouter';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ViewMode, Article } from './types';
 import { allArticles, siteConfig } from './utils/contentLoader';
@@ -17,10 +18,50 @@ import { RssModal } from './components/RssModal';
 import { InnerWorld } from './components/inner/InnerWorld';
 import { LeafMotif, PeachHeartMotif } from './components/Motifs';
 
-export function App() {
-  const [currentView, setCurrentView] = useState<ViewMode>('landing');
+// 单篇文章路由匹配包装组件
+function ArticleDetailWrapper({
+  onShowToast,
+  onTriggerBreeze,
+}: {
+  onShowToast: (msg: string) => void;
+  onTriggerBreeze?: () => void;
+}) {
+  const params = useParams<{ slug: string }>();
+  const [, setLocation] = useLocation();
+  const article = allArticles.find(
+    (a) => a.slug === params.slug || a.id === params.slug
+  );
+
+  if (!article) {
+    return (
+      <div className="w-full min-h-[60vh] flex flex-col items-center justify-center pt-40 text-center px-6">
+        <h2 className="font-serif text-2xl text-[#2F4B4D] mb-3">未找到该文章</h2>
+        <p className="text-xs text-[#8EABA8] mb-6 font-sans">
+          文章可能已被重命名或已归档
+        </p>
+        <button
+          onClick={() => setLocation('/writing')}
+          className="px-4 py-1.5 rounded-full border border-[#C7D9D6] text-xs text-[#2F4B4D] hover:bg-white transition-colors"
+        >
+          返回文章归档
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <ArticleView
+      article={article}
+      onBackToWriting={() => setLocation('/writing')}
+      onShowToast={onShowToast}
+      onTriggerBreeze={onTriggerBreeze}
+    />
+  );
+}
+
+function MainApp() {
+  const [location, setLocation] = useLocation();
   const [isIndexExpanded, setIsIndexExpanded] = useState<boolean>(false);
-  const [selectedArticle, setSelectedArticle] = useState<Article>(allArticles[0] || ({} as Article));
   const [isAboutModalOpen, setIsAboutModalOpen] = useState<boolean>(false);
   const [isRssModalOpen, setIsRssModalOpen] = useState<boolean>(false);
   const [isInnerWorldOpen, setIsInnerWorldOpen] = useState<boolean>(false);
@@ -40,12 +81,34 @@ export function App() {
     return false;
   });
 
+  // 根据 location 派生 currentView
+  const getCurrentView = (): ViewMode => {
+    if (location === '/' || location === '') return 'landing';
+    if (location.startsWith('/writing/')) return 'article';
+    if (location === '/writing') return 'writing';
+    if (location === '/photography') return 'photography';
+    if (location === '/projects') return 'projects';
+    if (location === '/notes') return 'notes';
+    if (location === '/now') return 'now';
+    if (location === '/elsewhere') return 'elsewhere';
+    if (location === '/about') return 'about';
+    return 'landing';
+  };
+
+  const currentView = getCurrentView();
+
   const showToast = (msg: string) => {
     setToastMessage(msg);
     setTimeout(() => {
       setToastMessage(null);
     }, 2800);
   };
+
+  // 页面切换时平滑滚动到顶部
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    setIsIndexExpanded(false);
+  }, [location]);
 
   // 锁定/解除 body 滚动条 (进入里世界时避免地表层滚动穿透)
   useEffect(() => {
@@ -69,26 +132,22 @@ export function App() {
 
   // 键盘快捷键与暗号监听
   useEffect(() => {
-    // 1. 打印控制台文气标语
     console.log(
       `%c fengqi. — quiet personal editorial space \n%c“清风徐来，水波不兴。愿你在此，停留片刻。”`,
       'color: #2F4B4D; font-family: serif; font-size: 16px; font-weight: bold; padding: 4px 0;',
       'color: #5C7A7C; font-family: serif; font-size: 13px; font-style: italic; padding-bottom: 6px;'
     );
 
-    // 2. 监听按键
     const handleKeyDown = (e: KeyboardEvent) => {
       const target = e.target as HTMLElement;
       if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable) {
         return;
       }
 
-      // 单键微风
       if (e.key === 'b' || e.key === 'B' || e.key === 'w' || e.key === 'W') {
         triggerBreeze();
       }
 
-      // 连续按键暗号识别 (secret / base)
       keySequenceRef.current.push(e.key.toLowerCase());
       if (keySequenceRef.current.length > 8) {
         keySequenceRef.current.shift();
@@ -115,27 +174,26 @@ export function App() {
   };
 
   const handleSelectSection = (section: ViewMode) => {
+    setIsIndexExpanded(false);
     if (section === 'about') {
       setIsAboutModalOpen(true);
-      setIsIndexExpanded(false);
       return;
     }
-    setCurrentView(section);
-    setIsIndexExpanded(false);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    if (section === 'landing') {
+      setLocation('/');
+      return;
+    }
+    setLocation(`/${section}`);
   };
 
   const handleSelectArticle = (article: Article) => {
-    setSelectedArticle(article);
-    setCurrentView('article');
     setIsIndexExpanded(false);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    setLocation(`/writing/${article.slug || article.id}`);
   };
 
   const handleNavigateHome = () => {
-    setCurrentView('landing');
     setIsIndexExpanded(false);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    setLocation('/');
   };
 
   return (
@@ -158,51 +216,84 @@ export function App() {
       <main className="relative z-10 flex-1">
         <AnimatePresence mode="wait">
           {isIndexExpanded ? (
-            /* 原位自体展开索引态 */
             <ExpandingIndex
               key="expanding-index"
               onSelectSection={handleSelectSection}
               onClose={() => setIsIndexExpanded(false)}
             />
           ) : (
-            /* 各常规视图 */
             <motion.div
-              key={currentView}
+              key={location}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              transition={{ duration: 0.35 }}
+              transition={{ duration: 0.3 }}
             >
-              {currentView === 'landing' && (
-                <LandingView
-                  onNavigateSection={handleSelectSection}
-                  onSelectArticle={handleSelectArticle}
-                  onOpenAboutModal={() => setIsAboutModalOpen(true)}
-                  onTriggerBreeze={triggerBreeze}
-                />
-              )}
+              <Switch>
+                <Route path="/">
+                  <LandingView
+                    onNavigateSection={handleSelectSection}
+                    onSelectArticle={handleSelectArticle}
+                    onOpenAboutModal={() => setIsAboutModalOpen(true)}
+                    onTriggerBreeze={triggerBreeze}
+                  />
+                </Route>
 
-              {currentView === 'writing' && (
-                <WritingView onSelectArticle={handleSelectArticle} />
-              )}
+                <Route path="/writing">
+                  <WritingView onSelectArticle={handleSelectArticle} />
+                </Route>
 
-              {currentView === 'article' && (
-                <ArticleView
-                  article={selectedArticle}
-                  onBackToWriting={() => setCurrentView('writing')}
-                  onShowToast={showToast}
-                />
-              )}
+                <Route path="/writing/:slug">
+                  <ArticleDetailWrapper
+                    onShowToast={showToast}
+                    onTriggerBreeze={triggerBreeze}
+                  />
+                </Route>
 
-              {currentView === 'photography' && <PhotographyView />}
+                <Route path="/photography">
+                  <PhotographyView />
+                </Route>
 
-              {currentView === 'projects' && <ProjectsView />}
+                <Route path="/projects">
+                  <ProjectsView />
+                </Route>
 
-              {currentView === 'notes' && <NotesView />}
+                <Route path="/notes">
+                  <NotesView />
+                </Route>
 
-              {currentView === 'now' && <NowView />}
+                <Route path="/now">
+                  <NowView />
+                </Route>
 
-              {currentView === 'elsewhere' && <ElsewhereView />}
+                <Route path="/elsewhere">
+                  <ElsewhereView />
+                </Route>
+
+                <Route path="/about">
+                  <LandingView
+                    onNavigateSection={handleSelectSection}
+                    onSelectArticle={handleSelectArticle}
+                    onOpenAboutModal={() => setIsAboutModalOpen(true)}
+                    onTriggerBreeze={triggerBreeze}
+                  />
+                  <AboutModal
+                    isOpen={true}
+                    onClose={() => setLocation('/')}
+                    onOpenRss={() => setIsRssModalOpen(true)}
+                  />
+                </Route>
+
+                {/* 默认回退 */}
+                <Route>
+                  <LandingView
+                    onNavigateSection={handleSelectSection}
+                    onSelectArticle={handleSelectArticle}
+                    onOpenAboutModal={() => setIsAboutModalOpen(true)}
+                    onTriggerBreeze={triggerBreeze}
+                  />
+                </Route>
+              </Switch>
             </motion.div>
           )}
         </AnimatePresence>
@@ -213,7 +304,9 @@ export function App() {
         <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-4 mb-2">
           <div className="flex items-center gap-1.5 text-[#8EABA8]">
             <LeafMotif size={13} color="#A7CFC3" />
-            <span>{siteConfig.site.title}space · {siteConfig.site.footer_text}</span>
+            <span>
+              {siteConfig.site.title}space · {siteConfig.site.footer_text}
+            </span>
           </div>
           <span className="text-[#C7D9D6]">/</span>
           <button
@@ -232,7 +325,8 @@ export function App() {
           </button>
         </div>
         <p className="text-[11px] text-[#8EABA8]/70">
-          All words & photographs © {siteConfig.site.copyright_year} {siteConfig.site.author}. All rights reserved.
+          All words & photographs © {siteConfig.site.copyright_year}{' '}
+          {siteConfig.site.author}. All rights reserved.
         </p>
       </footer>
 
@@ -285,6 +379,15 @@ export function App() {
         )}
       </AnimatePresence>
     </div>
+  );
+}
+
+export function App() {
+  const base = (import.meta.env.BASE_URL || '/').replace(/\/$/, '');
+  return (
+    <Router base={base}>
+      <MainApp />
+    </Router>
   );
 }
 

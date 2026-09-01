@@ -140,13 +140,13 @@ export const LandingView: React.FC<LandingViewProps> = ({
                 <div className="font-serif text-2xl font-normal text-[#2F4B4D]">
                   {siteConfig.profile.stats.photos}
                 </div>
-                <div className="text-xs text-[#8EABA8] font-sans">摄影</div>
+                <div className="text-xs text-[#8EABA8] font-sans">影像</div>
               </div>
               <div className="space-y-1">
                 <div className="font-serif text-2xl font-normal text-[#2F4B4D]">
-                  {siteConfig.profile.stats.likes}
+                  {siteConfig.sections.find(s => s.id === 'notes')?.count || 35}
                 </div>
-                <div className="text-xs text-[#8EABA8] font-sans">喜欢</div>
+                <div className="text-xs text-[#8EABA8] font-sans">随记</div>
               </div>
               <div className="space-y-1">
                 <div className="font-serif text-2xl font-normal text-[#2F4B4D]">
