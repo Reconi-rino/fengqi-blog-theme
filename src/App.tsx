@@ -284,8 +284,8 @@ function MainApp() {
                   />
                 </Route>
 
-                {/* 默认回退 */}
-                <Route>
+                {/* 默认全匹配兜底 */}
+                <Route path="/:rest*">
                   <LandingView
                     onNavigateSection={handleSelectSection}
                     onSelectArticle={handleSelectArticle}
@@ -383,9 +383,14 @@ function MainApp() {
 }
 
 export function App() {
-  const base = (import.meta.env.BASE_URL || '/').replace(/\/$/, '');
+  const getAppBase = () => {
+    let base = (import.meta.env.BASE_URL || '/').replace(/\/$/, '');
+    if (base === '.' || base === './') base = '';
+    return base;
+  };
+
   return (
-    <Router base={base}>
+    <Router base={getAppBase()}>
       <MainApp />
     </Router>
   );
