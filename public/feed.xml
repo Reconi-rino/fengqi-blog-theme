@@ -5,14 +5,14 @@
     <link>/</link>
     <description>一个安静、柔和、带微互动的个人刊物式博客空间</description>
     <language>zh-CN</language>
-    <lastBuildDate>Wed, 02 Sep 2026 11:09:10 GMT</lastBuildDate>
+    <lastBuildDate>Thu, 15 Oct 2026 10:04:48 GMT</lastBuildDate>
     <atom:link href="/feed.xml" rel="self" type="application/rss+xml"/>
     <managingEditor>风栖</managingEditor>
     <webMaster>风栖</webMaster>
     <item>
       <title>Markdown 增强排版演示：代码、Callout、Mermaid 与 HTML</title>
-      <link>/#writing/07-markdown-features-demo</link>
-      <guid isPermaLink="true">/#writing/07-markdown-features-demo</guid>
+      <link>/writing/07-markdown-features-demo</link>
+      <guid isPermaLink="true">/writing/07-markdown-features-demo</guid>
       <pubDate>Mon, 18 May 2026 00:00:00 GMT</pubDate>
       <category>tech</category>
       <description>探索本主题所支持的丰富富文本扩展能力。</description>
@@ -142,8 +142,8 @@ sequenceDiagram
     </item>
     <item>
       <title>在风里记录练习</title>
-      <link>/#writing/01-writing-in-the-wind</link>
-      <guid isPermaLink="true">/#writing/01-writing-in-the-wind</guid>
+      <link>/writing/01-writing-in-the-wind</link>
+      <guid isPermaLink="true">/writing/01-writing-in-the-wind</guid>
       <pubDate>Tue, 12 May 2026 00:00:00 GMT</pubDate>
       <category>essay</category>
       <description>风不是答案，只是让我慢下来的理由。</description>
@@ -162,8 +162,8 @@ sequenceDiagram
     </item>
     <item>
       <title>静态站点：从想法到上线</title>
-      <link>/#writing/02-static-site-launch</link>
-      <guid isPermaLink="true">/#writing/02-static-site-launch</guid>
+      <link>/writing/02-static-site-launch</link>
+      <guid isPermaLink="true">/writing/02-static-site-launch</guid>
       <pubDate>Wed, 06 May 2026 00:00:00 GMT</pubDate>
       <category>tech</category>
       <description>记录一次搭建个人网站的过程与思考。</description>
@@ -191,8 +191,8 @@ graph TD
     </item>
     <item>
       <title>春日收集夹</title>
-      <link>/#writing/03-spring-collection</link>
-      <guid isPermaLink="true">/#writing/03-spring-collection</guid>
+      <link>/writing/03-spring-collection</link>
+      <guid isPermaLink="true">/writing/03-spring-collection</guid>
       <pubDate>Tue, 28 Apr 2026 00:00:00 GMT</pubDate>
       <category>note</category>
       <description>一些当下的片段，像落在纸上的小光点。</description>
@@ -211,8 +211,8 @@ graph TD
     </item>
     <item>
       <title>关于专注力的温柔训练</title>
-      <link>/#writing/04-focus-training</link>
-      <guid isPermaLink="true">/#writing/04-focus-training</guid>
+      <link>/writing/04-focus-training</link>
+      <guid isPermaLink="true">/writing/04-focus-training</guid>
       <pubDate>Sun, 12 Apr 2026 00:00:00 GMT</pubDate>
       <category>essay</category>
       <description>不是对抗分心，而是和注意力做朋友。</description>
@@ -231,8 +231,8 @@ graph TD
     </item>
     <item>
       <title>我的写作环境配置清单</title>
-      <link>/#writing/05-writing-environment</link>
-      <guid isPermaLink="true">/#writing/05-writing-environment</guid>
+      <link>/writing/05-writing-environment</link>
+      <guid isPermaLink="true">/writing/05-writing-environment</guid>
       <pubDate>Mon, 30 Mar 2026 00:00:00 GMT</pubDate>
       <category>tech</category>
       <description>从输入法到编辑器，提升写作幸福感的 7 个小设置。</description>
@@ -258,8 +258,8 @@ editor:
     </item>
     <item>
       <title>在安静处，与自己重逢</title>
-      <link>/#writing/06-quiet-reunion</link>
-      <guid isPermaLink="true">/#writing/06-quiet-reunion</guid>
+      <link>/writing/06-quiet-reunion</link>
+      <guid isPermaLink="true">/writing/06-quiet-reunion</guid>
       <pubDate>Sun, 15 Feb 2026 00:00:00 GMT</pubDate>
       <category>essay</category>
       <description>有些日子，外界的声音太多，我们便容易丢失自己。</description>

@@ -28,8 +28,17 @@ function ArticleDetailWrapper({
 }) {
   const params = useParams<{ slug: string }>();
   const [, setLocation] = useLocation();
+
+  const rawSlug = params.slug || '';
+  const decodedSlug = decodeURIComponent(rawSlug).replace(/\/$/, '');
+  const cleanRawSlug = rawSlug.replace(/\/$/, '');
+
   const article = allArticles.find(
-    (a) => a.slug === params.slug || a.id === params.slug
+    (a) =>
+      a.slug === cleanRawSlug ||
+      a.id === cleanRawSlug ||
+      a.slug === decodedSlug ||
+      a.id === decodedSlug
   );
 
   if (!article) {
@@ -170,7 +179,13 @@ function MainApp() {
   }, []);
 
   const handleToggleIndex = () => {
-    setIsIndexExpanded((prev) => !prev);
+    setIsIndexExpanded((prev) => {
+      const next = !prev;
+      if (next) {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+      return next;
+    });
   };
 
   const handleSelectSection = (section: ViewMode) => {
@@ -227,7 +242,7 @@ function MainApp() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              transition={{ duration: 0.3 }}
+              transition={{ duration: 0.2 }}
             >
               <Switch>
                 <Route path="/">

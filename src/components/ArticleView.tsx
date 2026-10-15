@@ -39,10 +39,9 @@ export const ArticleView: React.FC<ArticleViewProps> = ({
 
   return (
     <motion.article
-      initial={{ opacity: 0, y: 12 }}
+      initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -8 }}
-      transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+      transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
       className="w-full min-h-screen pt-32 sm:pt-40 pb-32 px-6 sm:px-10 max-w-4xl mx-auto"
     >
       {/* 边缘水彩气泡与微装饰 */}

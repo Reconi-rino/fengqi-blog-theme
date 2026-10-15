@@ -217,6 +217,41 @@ const BeautifulCallout: React.FC<{ type: string; title?: string; children: React
   );
 };
 
+// 健壮保护：捕获 Markdown 或 Mermaid 渲染异常，避免破坏整页 React 状态
+class MarkdownErrorBoundary extends React.Component<
+  { children: React.ReactNode; rawContent: string },
+  { hasError: boolean }
+> {
+  constructor(props: any) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  static getDerivedStateFromError() {
+    return { hasError: true };
+  }
+
+  componentDidCatch(error: any) {
+    console.warn('Markdown rendering caught error:', error);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="space-y-4">
+          <div className="p-3 rounded-lg bg-[#E6EDEB]/60 border border-[#A7CFC3]/40 text-xs text-[#5C7A7C] font-sans">
+            部分富媒体格式解析暂缓，已切换至纯净正文阅读视图。
+          </div>
+          <div className="whitespace-pre-wrap font-serif text-base leading-relaxed text-[#2F4B4D]">
+            {this.props.rawContent}
+          </div>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
+
 interface MarkdownRendererProps {
   content: string;
   className?: string;
@@ -227,16 +262,22 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
   className = '',
 }) => {
   return (
-    <div className={`editorial-prose ${className}`}>
-      <ReactMarkdown
-        remarkPlugins={[remarkGfm, remarkCalloutPlugin]}
-        rehypePlugins={[rehypeRaw]}
-        components={{
-          // 代码块与 Mermaid 解析 (浅色优雅雾感风格)
-          code({ node, className: codeClass, children, ...props }) {
-            const match = /language-(\w+)/.exec(codeClass || '');
-            const language = match ? match[1] : '';
-            const codeString = String(children).replace(/\n$/, '');
+    <MarkdownErrorBoundary rawContent={content}>
+      <div className={`editorial-prose ${className}`}>
+        <ReactMarkdown
+          remarkPlugins={[remarkGfm, remarkCalloutPlugin]}
+          rehypePlugins={[rehypeRaw]}
+          components={{
+            // 剥离外层多余 pre，避免与 code 块中构建的优雅卡片发生标签非法嵌套
+            pre({ children }) {
+              return <>{children}</>;
+            },
+
+            // 代码块与 Mermaid 解析 (浅色优雅雾感风格)
+            code({ node, className: codeClass, children, ...props }) {
+              const match = /language-(\w+)/.exec(codeClass || '');
+              const language = match ? match[1] : '';
+              const codeString = String(children).replace(/\n$/, '');
 
             // Mermaid 流程图/架构图
             if (language === 'mermaid') {
@@ -352,6 +393,7 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
       >
         {content}
       </ReactMarkdown>
-    </div>
+      </div>
+    </MarkdownErrorBoundary>
   );
 };

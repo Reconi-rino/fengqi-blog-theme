@@ -70,7 +70,7 @@ const escapeXml = (unsafe) =>
 
 const itemsXml = articles
   .map((art) => {
-    const articleUrl = siteUrl ? `${siteUrl}/#writing/${art.slug}` : `/#writing/${art.slug}`;
+    const articleUrl = siteUrl ? `${siteUrl}/writing/${art.slug}` : `/writing/${art.slug}`;
     const pubDate = new Date(art.date.replace(/\./g, '-')).toUTCString();
     return `    <item>
       <title>${escapeXml(art.title)}</title>
