@@ -3,12 +3,18 @@ import { motion } from 'framer-motion';
 import { LeafMotif, PeachHeartMotif } from './Motifs';
 import { rawNowMarkdown, allElsewhere } from '../utils/contentLoader';
 import { MarkdownRenderer } from './MarkdownRenderer';
+import { MIST_EASE } from '../utils/motion';
 
 export const NowView: React.FC = () => {
   return (
     <div className="w-full max-w-3xl mx-auto pt-32 sm:pt-40 pb-28 px-6 sm:px-12">
       {/* 顶部标题与身份标签 */}
-      <div className="mb-12">
+      <motion.div
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, ease: MIST_EASE }}
+        className="mb-12"
+      >
         <div className="flex items-center gap-2 text-xs font-sans tracking-widest text-[#8EABA8] mb-2 uppercase">
           <span className="font-light">•</span>
           <span>NOW</span>
@@ -22,16 +28,21 @@ export const NowView: React.FC = () => {
           </span>
           <LeafMotif size={18} color="#A7CFC3" />
         </div>
-      </div>
+      </motion.div>
 
-      <div className="card-soft p-8 sm:p-10 border border-[#C7D9D6]/60 shadow-2xs space-y-6">
+      <motion.div
+        initial={{ opacity: 0, y: 14 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.08, duration: 0.55, ease: MIST_EASE }}
+        className="card-soft p-8 sm:p-10 shadow-2xs space-y-6"
+      >
         <MarkdownRenderer content={rawNowMarkdown} />
 
         <div className="pt-4 border-t border-[#C7D9D6]/30 flex items-center justify-between text-xs text-[#8EABA8]">
           <span>inspired by Derek Sivers' /now movement</span>
           <PeachHeartMotif size={12} color="#F6DCCB" />
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 };
@@ -39,7 +50,12 @@ export const NowView: React.FC = () => {
 export const ElsewhereView: React.FC = () => {
   return (
     <div className="w-full max-w-3xl mx-auto pt-32 sm:pt-40 pb-28 px-6 sm:px-12">
-      <div className="mb-12">
+      <motion.div
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, ease: MIST_EASE }}
+        className="mb-12"
+      >
         <div className="flex items-center gap-2 text-xs font-sans tracking-widest text-[#8EABA8] mb-2 uppercase">
           <span className="font-light">•</span>
           <span>ELSEWHERE</span>
@@ -53,7 +69,7 @@ export const ElsewhereView: React.FC = () => {
           </span>
           <LeafMotif size={18} color="#A7CFC3" />
         </div>
-      </div>
+      </motion.div>
 
       <div className="space-y-4">
         {allElsewhere.map((item, idx) => (
@@ -62,10 +78,11 @@ export const ElsewhereView: React.FC = () => {
             href={item.link}
             target="_blank"
             rel="noreferrer"
-            initial={{ opacity: 0, y: 10 }}
+            initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: idx * 0.08, duration: 0.35 }}
-            className="card-soft p-5 sm:p-6 border border-[#C7D9D6]/60 flex items-center justify-between group hover:border-[#A7CFC3] transition-all block text-left"
+            transition={{ delay: idx * 0.07, duration: 0.45, ease: MIST_EASE }}
+            whileHover={{ y: -2 }}
+            className="card-soft p-5 sm:p-6 flex items-center justify-between group hover:border-[#A7CFC3] transition-all block text-left"
           >
             <div>
               <div className="flex items-center gap-3">

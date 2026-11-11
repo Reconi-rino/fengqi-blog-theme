@@ -4,6 +4,16 @@ import remarkGfm from 'remark-gfm';
 import rehypeRaw from 'rehype-raw';
 import mermaid from 'mermaid';
 import { LeafMotif, PeachHeartMotif } from './Motifs';
+import { slugifyHeadingText } from '../utils/motion';
+
+function extractNodeText(node: React.ReactNode): string {
+  if (typeof node === 'string' || typeof node === 'number') return String(node);
+  if (Array.isArray(node)) return node.map(extractNodeText).join('');
+  if (React.isValidElement<{ children?: React.ReactNode }>(node)) {
+    return extractNodeText(node.props.children);
+  }
+  return '';
+}
 
 // 初始化 Mermaid 主题配置（低饱和雾青与黛青）
 mermaid.initialize({
@@ -252,21 +262,32 @@ class MarkdownErrorBoundary extends React.Component<
   }
 }
 
+const REMARK_PLUGINS = [remarkGfm, remarkCalloutPlugin];
+const REHYPE_PLUGINS = [rehypeRaw];
+
 interface MarkdownRendererProps {
   content: string;
   className?: string;
 }
 
-export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
+export const MarkdownRenderer: React.FC<MarkdownRendererProps> = React.memo(({
   content,
   className = '',
 }) => {
+  const headingCounts = new Map<string, number>();
+  const getHeadingId = (children: React.ReactNode) => {
+    const base = slugifyHeadingText(extractNodeText(children));
+    const seen = headingCounts.get(base) || 0;
+    headingCounts.set(base, seen + 1);
+    return seen === 0 ? `h-${base}` : `h-${base}-${seen}`;
+  };
+
   return (
     <MarkdownErrorBoundary rawContent={content}>
       <div className={`editorial-prose ${className}`}>
         <ReactMarkdown
-          remarkPlugins={[remarkGfm, remarkCalloutPlugin]}
-          rehypePlugins={[rehypeRaw]}
+          remarkPlugins={REMARK_PLUGINS}
+          rehypePlugins={REHYPE_PLUGINS}
           components={{
             // 剥离外层多余 pre，避免与 code 块中构建的优雅卡片发生标签非法嵌套
             pre({ children }) {
@@ -368,15 +389,18 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
             );
           },
 
-          // 标题层级
+          // 标题层级（附带锚点 id 与 scroll-mt-28 适配悬浮目录跳转）
           h1({ children }) {
-            return <h1 className="font-serif text-3xl sm:text-4xl text-[#2F4B4D] font-normal tracking-tight mt-12 mb-6">{children}</h1>;
+            const id = getHeadingId(children);
+            return <h1 id={id} className="scroll-mt-28 font-serif text-3xl sm:text-4xl text-[#2F4B4D] font-normal tracking-tight mt-12 mb-6">{children}</h1>;
           },
           h2({ children }) {
-            return <h2 className="font-serif text-2xl sm:text-3xl text-[#2F4B4D] font-normal tracking-tight mt-10 mb-5 pb-2 border-b border-[#C7D9D6]/30">{children}</h2>;
+            const id = getHeadingId(children);
+            return <h2 id={id} className="scroll-mt-28 font-serif text-2xl sm:text-3xl text-[#2F4B4D] font-normal tracking-tight mt-10 mb-5 pb-2 border-b border-[#C7D9D6]/30">{children}</h2>;
           },
           h3({ children }) {
-            return <h3 className="font-serif text-xl sm:text-2xl text-[#2F4B4D] font-normal tracking-tight mt-8 mb-4">{children}</h3>;
+            const id = getHeadingId(children);
+            return <h3 id={id} className="scroll-mt-28 font-serif text-xl sm:text-2xl text-[#2F4B4D] font-normal tracking-tight mt-8 mb-4">{children}</h3>;
           },
 
           // 列表
@@ -396,4 +420,4 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
       </div>
     </MarkdownErrorBoundary>
   );
-};
+});

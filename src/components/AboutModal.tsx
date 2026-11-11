@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { LeafMotif, FlowerMotif, PeachHeartMotif } from './Motifs';
 import { rawAboutMarkdown, allElsewhere } from '../utils/contentLoader';
 import { MarkdownRenderer } from './MarkdownRenderer';
+import { MIST_EASE } from '../utils/motion';
 
 interface AboutModalProps {
   isOpen: boolean;
@@ -25,7 +26,7 @@ export const AboutModal: React.FC<AboutModalProps> = ({ isOpen, onClose, onOpenR
             initial={{ scale: 0.96, opacity: 0, y: 15 }}
             animate={{ scale: 1, opacity: 1, y: 0 }}
             exit={{ scale: 0.96, opacity: 0, y: 10 }}
-            transition={{ duration: 0.3 }}
+            transition={{ duration: 0.35, ease: MIST_EASE }}
             onClick={(e) => e.stopPropagation()}
             className="card-soft p-8 sm:p-12 max-w-2xl w-full border border-[#C7D9D6] shadow-xl relative overflow-hidden space-y-6 max-h-[85vh] overflow-y-auto"
           >

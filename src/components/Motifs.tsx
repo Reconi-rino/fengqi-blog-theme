@@ -1,4 +1,6 @@
 import React from 'react';
+import { motion } from 'framer-motion';
+import { MIST_EASE } from '../utils/motion';
 
 interface MotifProps {
   className?: string;
@@ -124,26 +126,41 @@ export const BubbleMotif: React.FC<MotifProps> = ({
 );
 
 // 波线 (Wavy Line)
-export const WavyLineMotif: React.FC<MotifProps & { width?: number; height?: number }> = ({ 
-  className = '', 
-  width = 36, 
-  height = 10, 
-  color = '#C7D9D6' 
+export const WavyLineMotif: React.FC<
+  MotifProps & { width?: number; height?: number; animated?: boolean }
+> = ({
+  className = '',
+  width = 36,
+  height = 10,
+  color = '#C7D9D6',
+  animated = false,
 }) => (
-  <svg 
-    width={width} 
-    height={height} 
-    viewBox="0 0 36 10" 
-    fill="none" 
+  <svg
+    width={width}
+    height={height}
+    viewBox="0 0 36 10"
+    fill="none"
     xmlns="http://www.w3.org/2000/svg"
     className={`inline-block ${className}`}
   >
-    <path 
-      d="M1 5C4 2 8 2 11 5C14 8 18 8 21 5C24 2 28 2 31 5C32.5 6.5 34 6.5 35 5" 
-      stroke={color} 
-      strokeWidth="1.2" 
-      strokeLinecap="round" 
-    />
+    {animated ? (
+      <motion.path
+        d="M1 5C4 2 8 2 11 5C14 8 18 8 21 5C24 2 28 2 31 5C32.5 6.5 34 6.5 35 5"
+        stroke={color}
+        strokeWidth="1.2"
+        strokeLinecap="round"
+        initial={{ pathLength: 0, opacity: 0.2 }}
+        animate={{ pathLength: 1, opacity: 1 }}
+        transition={{ duration: 1.4, delay: 0.35, ease: MIST_EASE }}
+      />
+    ) : (
+      <path
+        d="M1 5C4 2 8 2 11 5C14 8 18 8 21 5C24 2 28 2 31 5C32.5 6.5 34 6.5 35 5"
+        stroke={color}
+        strokeWidth="1.2"
+        strokeLinecap="round"
+      />
+    )}
   </svg>
 );
 

@@ -31,13 +31,64 @@
   /* 字体家族定义 */
   --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
   --font-serif: 'Noto Serif SC', 'LXGW WenKai Screen', 'LXGW WenKai', 'Source Han Serif SC', 'Songti SC', SimSun, serif;
+  --font-wenkai: 'LXGW WenKai Screen', 'LXGW WenKai', 'Noto Serif SC', 'Songti SC', serif;
+
+  /* 纸境动态主题 变量 (默认 晨雾 Mist) */
+  --surface-bg: #F3F6F4;
+  --surface-glow-1: rgba(199, 217, 214, 0.45);
+  --surface-glow-2: rgba(230, 237, 235, 0.72);
+  --surface-glow-3: rgba(167, 207, 195, 0.18);
+  --surface-glow-4: rgba(246, 220, 203, 0.14);
+  --surface-header-bg: rgba(243, 246, 244, 0.82);
+  --surface-card-bg: rgba(255, 255, 255, 0.56);
+  --surface-card-border: rgba(199, 217, 214, 0.5);
+  --surface-veil-bg: rgba(243, 246, 244, 0.84);
+}
+
+/* 纸境 1: 晨雾 (默认) */
+[data-atmosphere="mist"] {
+  --surface-bg: #F3F6F4;
+  --surface-glow-1: rgba(199, 217, 214, 0.45);
+  --surface-glow-2: rgba(230, 237, 235, 0.72);
+  --surface-glow-3: rgba(167, 207, 195, 0.18);
+  --surface-glow-4: rgba(246, 220, 203, 0.14);
+  --surface-header-bg: rgba(243, 246, 244, 0.82);
+  --surface-card-bg: rgba(255, 255, 255, 0.56);
+  --surface-card-border: rgba(199, 217, 214, 0.5);
+  --surface-veil-bg: rgba(243, 246, 244, 0.84);
+}
+
+/* 纸境 2: 暖宣 (温润午后宣纸) */
+[data-atmosphere="warm"] {
+  --surface-bg: #F7F3EB;
+  --surface-glow-1: rgba(246, 220, 203, 0.44);
+  --surface-glow-2: rgba(235, 227, 212, 0.72);
+  --surface-glow-3: rgba(232, 180, 140, 0.16);
+  --surface-glow-4: rgba(167, 207, 195, 0.14);
+  --surface-header-bg: rgba(247, 243, 235, 0.84);
+  --surface-card-bg: rgba(255, 252, 246, 0.62);
+  --surface-card-border: rgba(218, 202, 180, 0.52);
+  --surface-veil-bg: rgba(247, 243, 235, 0.86);
+}
+
+/* 纸境 3: 晴瓷 (雨后浅青瓷) */
+[data-atmosphere="celadon"] {
+  --surface-bg: #EDF4F2;
+  --surface-glow-1: rgba(173, 211, 203, 0.42);
+  --surface-glow-2: rgba(219, 234, 230, 0.74);
+  --surface-glow-3: rgba(138, 184, 173, 0.2);
+  --surface-glow-4: rgba(230, 237, 235, 0.22);
+  --surface-header-bg: rgba(237, 244, 242, 0.82);
+  --surface-card-bg: rgba(250, 254, 253, 0.58);
+  --surface-card-border: rgba(180, 210, 204, 0.55);
+  --surface-veil-bg: rgba(237, 244, 242, 0.85);
 }
 
 body {
   margin: 0;
   padding: 0;
   font-family: var(--font-sans);
-  background-color: var(--color-fog-white);
+  background-color: var(--surface-bg);
   color: var(--color-slate-deep);
   overflow-x: hidden;
   position: relative;
@@ -48,13 +99,14 @@ body {
 
 /* 柔和水彩雾感背景底纹 (表世界) */
 .misty-background {
-  background-color: #F3F6F4;
+  background-color: var(--surface-bg);
   background-image: 
-    radial-gradient(ellipse at 85% 15%, rgba(199, 217, 214, 0.45) 0%, transparent 60%),
-    radial-gradient(ellipse at 15% 80%, rgba(230, 237, 235, 0.7) 0%, transparent 65%),
-    radial-gradient(circle at 60% 70%, rgba(167, 207, 195, 0.18) 0%, transparent 50%),
-    radial-gradient(circle at 40% 30%, rgba(246, 220, 203, 0.12) 0%, transparent 40%);
+    radial-gradient(ellipse at 85% 15%, var(--surface-glow-1) 0%, transparent 60%),
+    radial-gradient(ellipse at 15% 80%, var(--surface-glow-2) 0%, transparent 65%),
+    radial-gradient(circle at 60% 70%, var(--surface-glow-3) 0%, transparent 50%),
+    radial-gradient(circle at 40% 30%, var(--surface-glow-4) 0%, transparent 40%);
   background-attachment: fixed;
+  transition: background-color 0.7s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 /* 里世界深邃水彩夜色底纹 (Inner World Background) */
@@ -184,21 +236,28 @@ body {
   background: rgba(167, 207, 195, 0.7);
 }
 
+/* 文楷阅读体切换 */
+.font-wenkai,
+.editorial-prose.font-wenkai {
+  font-family: var(--font-wenkai);
+}
+
 /* 动效缓动 */
 .transition-editorial {
-  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.45s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 /* 柔和微边框与阴影 */
 .border-subtle {
-  border-color: rgba(199, 217, 214, 0.5);
+  border-color: var(--surface-card-border);
 }
 
 .card-soft {
-  background: rgba(255, 255, 255, 0.55);
+  background: var(--surface-card-bg);
   backdrop-filter: blur(12px);
-  border: 1px solid rgba(199, 217, 214, 0.5);
-  border-radius: 12px;
+  border: 1px solid var(--surface-card-border);
+  border-radius: 14px;
+  transition: background-color 0.6s ease, border-color 0.45s ease, box-shadow 0.45s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 /* 里世界微光毛玻璃卡片 */
@@ -207,4 +266,40 @@ body {
   backdrop-filter: blur(16px);
   border: 1px solid rgba(215, 201, 184, 0.12);
   border-radius: 12px;
+}
+
+/* 柔和呼吸漂浮光晕 */
+@keyframes mist-breathe {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) scale(1);
+    opacity: 0.72;
+  }
+  50% {
+    transform: translate3d(12px, -16px, 0) scale(1.06);
+    opacity: 0.95;
+  }
+}
+
+@keyframes mist-drift-reverse {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(-14px, 12px, 0) scale(1.04);
+  }
+}
+
+.animate-mist-breathe {
+  animation: mist-breathe 16s ease-in-out infinite;
+}
+
+.animate-mist-drift {
+  animation: mist-drift-reverse 20s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-mist-breathe,
+  .animate-mist-drift {
+    animation: none;
+  }
 }
