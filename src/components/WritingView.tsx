@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Article } from '../types';
 import { allArticles } from '../utils/contentLoader';
 import { LeafMotif } from './Motifs';
+import { MistReveal, CurtainImage } from './MistReveal';
 import { MIST_EASE, PILL_SPRING, GENTLE_SPRING } from '../utils/motion';
 
 interface WritingViewProps {
@@ -66,17 +67,17 @@ export const WritingView: React.FC<WritingViewProps> = ({ onSelectArticle }) => 
 
   return (
     <div className="w-full max-w-7xl mx-auto pt-32 sm:pt-40 pb-28 px-6 sm:px-12 md:px-16">
-      {/* 顶部标题与身份标签 */}
-      <motion.div
-        initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, ease: MIST_EASE }}
+      {/* 顶部标题与身份标签（雾感浮现） */}
+      <MistReveal
+        duration={0.75}
+        yOffset={16}
+        blurAmount={6}
         className="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-6"
       >
         <div>
-          <div className="flex items-center gap-2 text-xs font-sans tracking-widest text-[#8EABA8] mb-2 uppercase">
+          <div className="flex items-center gap-2 text-xs font-mono tracking-widest text-[#8EABA8] mb-2 uppercase">
             <span className="font-light">○</span>
-            <span>WRITING · {filteredArticles.length} 篇</span>
+            <span>WRITING · {filteredArticles.length} ENTRIES</span>
           </div>
           <div className="flex items-baseline gap-4">
             <h1 className="font-serif text-4xl sm:text-5xl font-normal text-[#2F4B4D] tracking-tight">
@@ -89,20 +90,20 @@ export const WritingView: React.FC<WritingViewProps> = ({ onSelectArticle }) => 
           </div>
         </div>
 
-        {/* 右侧：视图切换器（双栏 / 画报 / 索引）+ 极轻搜索框 */}
-        <div className="flex flex-wrap items-center gap-3">
+        {/* 右侧：底线式检索框 + 刊物视图切换 */}
+        <div className="flex flex-wrap items-end gap-5">
           <div className="relative">
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="检索标题或片段…"
-              className="w-44 sm:w-52 px-3.5 py-1.5 rounded-full bg-white/55 border border-[#C7D9D6]/60 text-xs font-sans text-[#2F4B4D] placeholder:text-[#8EABA8] focus:outline-none focus:border-[#A7CFC3] focus:bg-white/85 transition-all"
+              className="w-40 sm:w-48 pb-1.5 pr-5 bg-transparent border-b border-[#C7D9D6]/70 text-xs font-sans text-[#2F4B4D] placeholder:text-[#8EABA8] focus:outline-none focus:border-[#2F4B4D] transition-colors"
             />
             {searchQuery && (
               <button
                 onClick={() => setSearchQuery('')}
-                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[11px] text-[#8EABA8] hover:text-[#2F4B4D] focus:outline-none"
+                className="absolute right-0 bottom-1.5 text-[11px] text-[#8EABA8] hover:text-[#2F4B4D] focus:outline-none"
                 aria-label="清空搜索"
               >
                 ✕
@@ -110,7 +111,7 @@ export const WritingView: React.FC<WritingViewProps> = ({ onSelectArticle }) => 
             )}
           </div>
 
-          <div className="inline-flex items-center p-0.5 rounded-full bg-white/50 border border-[#C7D9D6]/60 text-xs font-sans">
+          <div className="inline-flex items-center gap-4 border-b border-[#C7D9D6]/40 text-xs font-sans">
             {(
               [
                 { id: 'split', label: '双栏预览' },
@@ -123,53 +124,53 @@ export const WritingView: React.FC<WritingViewProps> = ({ onSelectArticle }) => 
                 <button
                   key={mode.id}
                   onClick={() => setLayoutMode(mode.id)}
-                  className={`relative px-3 py-1 rounded-full transition-colors focus:outline-none ${
+                  className={`relative pb-1.5 transition-colors focus:outline-none ${
                     active ? 'text-[#2F4B4D] font-medium' : 'text-[#8EABA8] hover:text-[#2F4B4D]'
                   }`}
                 >
+                  {mode.label}
                   {active && (
                     <motion.span
                       layoutId="writing-layout-pill"
                       transition={PILL_SPRING}
-                      className="absolute inset-0 rounded-full bg-white shadow-2xs border border-[#C7D9D6]/40 -z-10"
+                      className="absolute bottom-0 left-0 right-0 h-[1.5px] bg-[#2F4B4D]"
                     />
                   )}
-                  {mode.label}
                 </button>
               );
             })}
           </div>
         </div>
-      </motion.div>
+      </MistReveal>
 
       {/* 分类与标签筛选栏 */}
       <div className="flex flex-wrap items-center justify-between gap-4 mb-10">
-        {/* 分类 Chips（带滑移胶囊背景） */}
-        <div className="inline-flex items-center gap-1.5 p-1 rounded-full bg-white/40 border border-[#C7D9D6]/45">
+        {/* 分类下划线 Tab */}
+        <div className="inline-flex items-center gap-5 border-b border-[#C7D9D6]/35">
           {['all', 'essay', 'tech', 'note'].map((cat) => {
             const active = selectedCategory === cat;
             return (
               <button
                 key={cat}
                 onClick={() => setSelectedCategory(cat)}
-                className={`relative px-3.5 py-1 rounded-full text-xs font-sans transition-colors duration-200 focus:outline-none ${
-                  active ? 'text-[#F3F6F4]' : 'text-[#5C7A7C] hover:text-[#2F4B4D]'
+                className={`relative pb-2 text-xs font-sans tracking-wide transition-colors duration-200 focus:outline-none ${
+                  active ? 'text-[#2F4B4D] font-medium' : 'text-[#8EABA8] hover:text-[#2F4B4D]'
                 }`}
               >
+                {cat === 'all' ? '全部' : cat}
                 {active && (
                   <motion.span
                     layoutId="writing-cat-pill"
                     transition={PILL_SPRING}
-                    className="absolute inset-0 rounded-full bg-[#2F4B4D] shadow-2xs -z-10"
+                    className="absolute bottom-0 left-0 right-0 h-[1.5px] bg-[#2F4B4D]"
                   />
                 )}
-                {cat === 'all' ? '全部' : cat}
               </button>
             );
           })}
         </div>
 
-        {/* 动态标签筛选条 */}
+        {/* 便签印记风格动态标签 */}
         {allTags.length > 0 && (
           <div className="flex flex-wrap items-center gap-1.5">
             {allTags.map((tag) => {
@@ -178,10 +179,10 @@ export const WritingView: React.FC<WritingViewProps> = ({ onSelectArticle }) => 
                 <button
                   key={tag}
                   onClick={() => handleTagToggle(tag)}
-                  className={`px-2.5 py-0.5 rounded-full text-[11px] font-sans transition-all focus:outline-none border ${
+                  className={`px-2 py-0.5 rounded-sm text-[11px] font-mono transition-all focus:outline-none border ${
                     active
-                      ? 'bg-[#A7CFC3]/35 border-[#A7CFC3] text-[#2F4B4D] font-medium'
-                      : 'bg-white/45 border-[#C7D9D6]/40 text-[#8EABA8] hover:text-[#2F4B4D] hover:bg-white/80'
+                      ? 'bg-[#2F4B4D] border-[#2F4B4D] text-[#F3F6F4]'
+                      : 'bg-white/40 border-[#C7D9D6]/50 text-[#8EABA8] hover:text-[#2F4B4D] hover:bg-white/80'
                   }`}
                 >
                   #{tag}
@@ -193,7 +194,7 @@ export const WritingView: React.FC<WritingViewProps> = ({ onSelectArticle }) => 
                 onClick={() => setSelectedTag(null)}
                 className="text-[11px] text-[#8EABA8] hover:text-[#2F4B4D] px-2 py-0.5 underline underline-offset-2 focus:outline-none"
               >
-                重置标签
+                重置
               </button>
             )}
           </div>
@@ -271,7 +272,7 @@ export const WritingView: React.FC<WritingViewProps> = ({ onSelectArticle }) => 
                                   <span className="font-mono text-xs text-[#8EABA8] w-11 shrink-0">
                                     {art.shortDate}
                                   </span>
-                                  <span className="text-[11px] font-sans px-2 py-0.5 rounded-full bg-[#E6EDEB] text-[#5C7A7C] shrink-0">
+                                  <span className="text-[10px] font-mono uppercase tracking-wider px-2 py-0.5 rounded-sm bg-[#E6EDEB]/80 text-[#5C7A7C] border border-[#C7D9D6]/40 shrink-0">
                                     {art.category}
                                   </span>
                                   <span className="text-[#A7CFC3] shrink-0">
@@ -418,24 +419,24 @@ export const WritingView: React.FC<WritingViewProps> = ({ onSelectArticle }) => 
               {filteredArticles.map((art, idx) => (
                 <motion.article
                   key={art.id}
-                  initial={{ opacity: 0, y: 14 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: idx * 0.045, duration: 0.45, ease: MIST_EASE }}
+                  initial={{ opacity: 0, y: 16, filter: 'blur(4px)' }}
+                  animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+                  transition={{ delay: idx * 0.045, duration: 0.5, ease: MIST_EASE }}
                   whileHover={{ y: -4 }}
                   onClick={() => onSelectArticle(art)}
                   className="card-soft p-5 sm:p-6 cursor-pointer group hover:border-[#A7CFC3] flex flex-col justify-between gap-4 overflow-hidden"
                 >
                   <div>
                     {art.coverImage ? (
-                      <div className="w-full aspect-[16/10] rounded-xl overflow-hidden mb-4 bg-[#E6EDEB] border border-[#C7D9D6]/30 relative">
-                        <img
-                          src={art.coverImage}
-                          alt={art.title}
-                          className="w-full h-full object-cover filter saturate-90 group-hover:scale-105 group-hover:saturate-100 transition-all duration-700"
-                        />
-                      </div>
+                      <CurtainImage
+                        src={art.coverImage}
+                        alt={art.title}
+                        delay={idx * 0.04}
+                        className="w-full aspect-[16/10] rounded-lg mb-4 bg-[#E6EDEB] border border-[#C7D9D6]/30 relative"
+                        imgClassName="w-full h-full object-cover filter saturate-90 group-hover:scale-105 group-hover:saturate-100 transition-all duration-700"
+                      />
                     ) : (
-                      <div className="w-full aspect-[16/10] rounded-xl mb-4 bg-gradient-to-br from-[#E6EDEB]/80 to-[#F6DCCB]/25 border border-[#C7D9D6]/35 flex flex-col items-center justify-center p-4 text-center">
+                      <div className="w-full aspect-[16/10] rounded-lg mb-4 bg-gradient-to-br from-[#E6EDEB]/80 to-[#F6DCCB]/25 border border-[#C7D9D6]/35 flex flex-col items-center justify-center p-4 text-center">
                         <LeafMotif size={22} color="#A7CFC3" className="mb-2 opacity-80" />
                         <span className="font-serif text-xs text-[#5C7A7C]/80 line-clamp-1">
                           {art.subtitle || art.category}
@@ -445,7 +446,7 @@ export const WritingView: React.FC<WritingViewProps> = ({ onSelectArticle }) => 
 
                     <div className="flex items-center justify-between text-[11px] font-sans text-[#8EABA8] mb-2">
                       <span className="font-mono">{art.date}</span>
-                      <span className="px-2 py-0.5 rounded-full bg-[#E6EDEB] text-[#5C7A7C]">
+                      <span className="px-2 py-0.5 rounded-sm font-mono uppercase text-[10px] bg-[#E6EDEB]/80 text-[#5C7A7C]">
                         {art.category}
                       </span>
                     </div>

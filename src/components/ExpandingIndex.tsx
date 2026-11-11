@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { ViewMode } from '../types';
 import { siteConfig, allArticles, allPhotos, allProjects, allNotes } from '../utils/contentLoader';
 import { LeafMotif, FlowerMotif, PeachHeartMotif } from './Motifs';
+import { SpecimenCorners } from './MistReveal';
 import {
   ATMOSPHERE_PRESETS,
   AtmosphereMode,
@@ -14,7 +15,7 @@ import {
 interface ExpandingIndexProps {
   currentView: ViewMode;
   atmosphere: AtmosphereMode;
-  onSelectAtmosphere: (mode: AtmosphereMode) => void;
+  onSelectAtmosphere: (mode: AtmosphereMode, origin?: { x: number; y: number }) => void;
   onSelectSection: (sectionId: ViewMode) => void;
   onClose: () => void;
 }
@@ -64,6 +65,7 @@ export const ExpandingIndex: React.FC<ExpandingIndexProps> = ({
         className="w-full max-w-4xl mx-auto"
       >
         <div className="card-soft p-7 sm:p-14 relative overflow-hidden shadow-sm">
+          <SpecimenCorners active />
           {/* 背景柔和呼吸水彩微光 */}
           <div className="absolute -top-24 -right-24 w-80 h-80 rounded-full bg-[#E6EDEB]/70 blur-3xl pointer-events-none animate-mist-breathe" />
           <div className="absolute -bottom-20 -left-20 w-72 h-72 rounded-full bg-[#A7CFC3]/20 blur-3xl pointer-events-none animate-mist-drift" />
@@ -159,19 +161,25 @@ export const ExpandingIndex: React.FC<ExpandingIndexProps> = ({
             })}
           </div>
 
-          {/* 纸境调色盘选择条 */}
+          {/* 纸境调色盘选择条：画廊纸签风格，点击坐标向外水墨晕染 */}
           <div className="relative z-10 mt-8 pt-6 border-t border-[#C7D9D6]/35 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div className="flex items-center gap-2 text-xs text-[#8EABA8] font-sans">
               <span>纸境色调 · Paper Atmosphere</span>
             </div>
-            <div className="inline-flex items-center gap-1.5 p-1 rounded-full bg-white/50 border border-[#C7D9D6]/45 self-start sm:self-auto">
+            <div className="inline-flex items-center gap-1 p-1 rounded-lg bg-white/45 border border-[#C7D9D6]/45 self-start sm:self-auto">
               {ATMOSPHERE_PRESETS.map((preset) => {
                 const isSelected = atmosphere === preset.id;
                 return (
                   <button
                     key={preset.id}
-                    onClick={() => onSelectAtmosphere(preset.id)}
-                    className={`relative px-3 py-1 rounded-full text-xs font-sans transition-colors flex items-center gap-1.5 focus:outline-none ${
+                    onClick={(e) => {
+                      const rect = e.currentTarget.getBoundingClientRect();
+                      onSelectAtmosphere(preset.id, {
+                        x: e.clientX || rect.left + rect.width / 2,
+                        y: e.clientY || rect.top + rect.height / 2,
+                      });
+                    }}
+                    className={`relative px-3.5 py-1 rounded-md text-xs font-serif tracking-wider transition-colors flex items-center gap-2 focus:outline-none ${
                       isSelected ? 'text-[#2F4B4D] font-medium' : 'text-[#8EABA8] hover:text-[#2F4B4D]'
                     }`}
                   >
@@ -179,13 +187,13 @@ export const ExpandingIndex: React.FC<ExpandingIndexProps> = ({
                       <motion.span
                         layoutId="index-atmosphere-pill"
                         transition={PILL_SPRING}
-                        className="absolute inset-0 rounded-full bg-white shadow-2xs border border-[#C7D9D6]/50 -z-10"
+                        className="absolute inset-0 rounded-md bg-white shadow-2xs border border-[#C7D9D6]/50 -z-10"
                       />
                     )}
                     <span
-                      className="w-2.5 h-2.5 rounded-full border border-[#2F4B4D]/20"
+                      className="w-2.5 h-2.5 rounded-full border border-[#2F4B4D]/25"
                       style={{
-                        background: `linear-gradient(135deg, ${preset.swatchPrimary} 45%, ${preset.swatchAccent} 100%)`,
+                        background: `radial-gradient(circle at 35% 35%, ${preset.swatchPrimary} 20%, ${preset.swatchAccent} 100%)`,
                       }}
                     />
                     <span>{preset.name}</span>

@@ -3,6 +3,7 @@ import { motion, AnimatePresence, useScroll, useSpring } from 'framer-motion';
 import { Article } from '../types';
 import { LeafMotif, PeachHeartMotif } from './Motifs';
 import { MarkdownRenderer } from './MarkdownRenderer';
+import { MistReveal, CurtainImage } from './MistReveal';
 import { extractHeadings, MIST_EASE, PILL_SPRING } from '../utils/motion';
 
 interface ArticleViewProps {
@@ -185,8 +186,8 @@ export const ArticleView: React.FC<ArticleViewProps> = ({
         <span className="text-xs text-[#8EABA8] font-mono">fengqi journal</span>
       </div>
 
-      {/* 文章主标题 */}
-      <div className="mb-6">
+      {/* 文章主标题（雾感浮现） */}
+      <MistReveal duration={0.8} yOffset={16} blurAmount={6} className="mb-6">
         <div className="flex items-start gap-4">
           <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl font-normal text-[#2F4B4D] tracking-tight leading-tight">
             {article.title}
@@ -202,7 +203,7 @@ export const ArticleView: React.FC<ArticleViewProps> = ({
 
         {/* 元信息与标签 */}
         <div className="mt-4 flex flex-wrap items-center gap-3 text-xs font-sans text-[#8EABA8]">
-          <span>{article.date}</span>
+          <span className="font-mono">{article.date}</span>
           <span>·</span>
           <span>约 {article.readTime}</span>
           <span>·</span>
@@ -215,7 +216,7 @@ export const ArticleView: React.FC<ArticleViewProps> = ({
                 {article.tags.map((t) => (
                   <span
                     key={t}
-                    className="px-2 py-0.5 rounded-md bg-[#E6EDEB] text-[#5C7A7C] text-[11px]"
+                    className="px-2 py-0.5 rounded-sm font-mono bg-[#E6EDEB]/80 text-[#5C7A7C] text-[10px] border border-[#C7D9D6]/40"
                   >
                     #{t}
                   </span>
@@ -226,11 +227,11 @@ export const ArticleView: React.FC<ArticleViewProps> = ({
         </div>
 
         {/* 极简阅读调节工具条（字体风格 + 禅意专注 + 移动端目录） */}
-        <div className="mt-6 flex flex-wrap items-center gap-2 text-[11px] font-sans">
-          <div className="inline-flex items-center p-0.5 rounded-full bg-white/50 border border-[#C7D9D6]/50">
+        <div className="mt-6 flex flex-wrap items-center gap-3 text-[11px] font-sans">
+          <div className="inline-flex items-center p-0.5 rounded-md bg-white/45 border border-[#C7D9D6]/55">
             <button
               onClick={() => setFontStyle('serif')}
-              className={`px-2.5 py-0.5 rounded-full transition-colors focus:outline-none ${
+              className={`px-2.5 py-0.5 rounded-sm transition-colors focus:outline-none ${
                 fontStyle === 'serif'
                   ? 'bg-white text-[#2F4B4D] font-medium shadow-2xs'
                   : 'text-[#8EABA8] hover:text-[#2F4B4D]'
@@ -240,7 +241,7 @@ export const ArticleView: React.FC<ArticleViewProps> = ({
             </button>
             <button
               onClick={() => setFontStyle('wenkai')}
-              className={`px-2.5 py-0.5 rounded-full transition-colors focus:outline-none ${
+              className={`px-2.5 py-0.5 rounded-sm transition-colors focus:outline-none ${
                 fontStyle === 'wenkai'
                   ? 'bg-white text-[#2F4B4D] font-medium shadow-2xs'
                   : 'text-[#8EABA8] hover:text-[#2F4B4D]'
@@ -253,10 +254,10 @@ export const ArticleView: React.FC<ArticleViewProps> = ({
           {onToggleZenMode && (
             <button
               onClick={onToggleZenMode}
-              className={`px-3 py-1 rounded-full border transition-all focus:outline-none ${
+              className={`px-3 py-1 rounded-md border transition-all focus:outline-none ${
                 zenMode
                   ? 'bg-[#2F4B4D] text-[#F3F6F4] border-[#2F4B4D]'
-                  : 'bg-white/45 border-[#C7D9D6]/50 text-[#5C7A7C] hover:text-[#2F4B4D] hover:bg-white/75'
+                  : 'bg-white/45 border-[#C7D9D6]/55 text-[#5C7A7C] hover:text-[#2F4B4D] hover:bg-white/75'
               }`}
             >
               {zenMode ? '退出禅意阅读' : '禅意专注'}
@@ -266,7 +267,7 @@ export const ArticleView: React.FC<ArticleViewProps> = ({
           {headings.length >= 2 && (
             <button
               onClick={() => setIsMobileTocOpen((v) => !v)}
-              className="xl:hidden px-3 py-1 rounded-full bg-white/45 border border-[#C7D9D6]/50 text-[#5C7A7C] hover:text-[#2F4B4D] transition-all focus:outline-none"
+              className="xl:hidden px-3 py-1 rounded-md bg-white/45 border border-[#C7D9D6]/55 text-[#5C7A7C] hover:text-[#2F4B4D] transition-all focus:outline-none"
             >
               {isMobileTocOpen ? '收起目录 ▲' : `目录 (${headings.length}) ▼`}
             </button>
@@ -299,28 +300,24 @@ export const ArticleView: React.FC<ArticleViewProps> = ({
             </motion.div>
           )}
         </AnimatePresence>
-      </div>
+      </MistReveal>
 
       {/* 柔和微分割线 */}
       <div className="w-full h-px bg-[#C7D9D6]/40 my-8" />
 
-      {/* 封面头图（若有） */}
+      {/* 封面头图（展陈揭幕动效） */}
       {article.coverImage && (
-        <motion.div
-          initial={{ opacity: 0, scale: 0.99 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.6, ease: MIST_EASE }}
-          className="my-8 rounded-xl overflow-hidden max-h-[420px] relative border border-[#C7D9D6]/40 shadow-xs"
-        >
-          <img
+        <div className="my-8 rounded-lg overflow-hidden max-h-[420px] relative border border-[#C7D9D6]/40 shadow-xs">
+          <CurtainImage
             src={article.coverImage}
             alt={article.title}
-            className="w-full h-full object-cover filter saturate-95"
+            className="w-full h-full max-h-[420px]"
+            imgClassName="w-full h-full max-h-[420px] object-cover filter saturate-95"
           />
-          <div className="absolute bottom-3 right-4 px-2.5 py-1 rounded-md bg-black/25 backdrop-blur-xs text-[11px] text-white/90 font-sans">
+          <div className="absolute bottom-3 right-4 px-2.5 py-1 rounded-sm bg-black/25 backdrop-blur-xs text-[11px] text-white/90 font-sans">
             photographed by fengqi
           </div>
-        </motion.div>
+        </div>
       )}
 
       {/* 正文阅读区：受控最大宽度 740px，支持宋体 / 文楷即时切换 */}

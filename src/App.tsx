@@ -1,10 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { flushSync } from 'react-dom';
 import { Router, Route, Switch, useLocation, useParams } from 'wouter';
 import { AnimatePresence, motion, MotionConfig } from 'framer-motion';
 import { ViewMode, Article } from './types';
 import { allArticles, siteConfig } from './utils/contentLoader';
 import { ATMOSPHERE_PRESETS, AtmosphereMode, MIST_EASE } from './utils/motion';
 import { AmbientCanvas, AmbientCanvasHandle } from './components/AmbientCanvas';
+import { WatercolorTransition, WatercolorBloomEvent } from './components/WatercolorTransition';
 import { Header } from './components/Header';
 import { ExpandingIndex } from './components/ExpandingIndex';
 import { LandingView } from './components/LandingView';
@@ -93,8 +95,11 @@ function MainApp() {
   const [isInnerWorldOpen, setIsInnerWorldOpen] = useState<boolean>(false);
   const [zenMode, setZenMode] = useState<boolean>(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [watercolorBloom, setWatercolorBloom] = useState<WatercolorBloomEvent | null>(null);
   const ambientCanvasRef = useRef<AmbientCanvasHandle | null>(null);
   const toastTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const bloomTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const isTransitioningRef = useRef<boolean>(false);
 
   // 纸境氛围色调（晨雾 默认 / 暖宣 / 晴瓷）
   const [atmosphere, setAtmosphere] = useState<AtmosphereMode>(() => {
@@ -154,18 +159,91 @@ function MainApp() {
     }, 2800);
   };
 
-  const handleSelectAtmosphere = (mode: AtmosphereMode) => {
-    setAtmosphere(mode);
+  const handleSelectAtmosphere = (
+    mode: AtmosphereMode,
+    origin?: { x: number; y: number }
+  ) => {
+    if (mode === atmosphere) return;
+
+    const x = origin?.x ?? (typeof window !== 'undefined' ? window.innerWidth - 150 : 900);
+    const y = origin?.y ?? 38;
+
     const preset = ATMOSPHERE_PRESETS.find((p) => p.id === mode);
     if (preset) {
-      showToast(`切换纸境：${preset.name} · ${preset.enName}`);
+      showToast(`纸境晕染：${preset.name} · ${preset.enName}`);
     }
+
+    if (!reducedMotion) {
+      ambientCanvasRef.current?.spawnPigmentBloom?.(x, y, mode);
+      setWatercolorBloom({ id: Date.now(), x, y, mode });
+      if (bloomTimerRef.current) clearTimeout(bloomTimerRef.current);
+      bloomTimerRef.current = setTimeout(() => {
+        setWatercolorBloom(null);
+      }, 1350);
+    }
+
+    const doc = document as Document & {
+      startViewTransition?: (cb: () => void) => {
+        ready: Promise<void>;
+        finished: Promise<void>;
+      };
+    };
+
+    if (!reducedMotion && typeof doc.startViewTransition === 'function' && !isTransitioningRef.current) {
+      try {
+        isTransitioningRef.current = true;
+        document.documentElement.classList.add('atmosphere-transitioning');
+
+        const transition = doc.startViewTransition(() => {
+          flushSync(() => {
+            document.documentElement.setAttribute('data-atmosphere', mode);
+            setAtmosphere(mode);
+          });
+        });
+
+        const endRadius = Math.hypot(
+          Math.max(x, window.innerWidth - x),
+          Math.max(y, window.innerHeight - y)
+        );
+
+        transition.ready
+          .then(() => {
+            document.documentElement.animate(
+              {
+                clipPath: [
+                  `circle(0px at ${x}px ${y}px)`,
+                  `circle(${endRadius}px at ${x}px ${y}px)`,
+                ],
+              },
+              {
+                duration: 940,
+                easing: 'cubic-bezier(0.22, 1, 0.36, 1)',
+                pseudoElement: '::view-transition-new(root)',
+              }
+            );
+          })
+          .catch(() => {});
+
+        transition.finished
+          .catch(() => {})
+          .finally(() => {
+            document.documentElement.classList.remove('atmosphere-transitioning');
+            isTransitioningRef.current = false;
+          });
+        return;
+      } catch {
+        document.documentElement.classList.remove('atmosphere-transitioning');
+        isTransitioningRef.current = false;
+      }
+    }
+
+    setAtmosphere(mode);
   };
 
-  const handleCycleAtmosphere = () => {
+  const handleCycleAtmosphere = (origin?: { x: number; y: number }) => {
     const order: AtmosphereMode[] = ['mist', 'warm', 'celadon'];
     const next = order[(order.indexOf(atmosphere) + 1) % order.length];
-    handleSelectAtmosphere(next);
+    handleSelectAtmosphere(next, origin);
   };
 
   // 页面切换时平滑滚动到顶部并退出专注与索引展开态
@@ -278,6 +356,9 @@ function MainApp() {
         data-atmosphere={atmosphere}
         className="relative min-h-screen misty-background flex flex-col justify-between selection:bg-[#A7CFC3]/30 selection:text-[#2F4B4D]"
       >
+        {/* 细微宣纸肌理质感遮罩 */}
+        <div className="fixed inset-0 pointer-events-none z-0 paper-grain-overlay" />
+
         {/* 背景微生态粒子 Canvas */}
         <AmbientCanvas
           ref={ambientCanvasRef}
@@ -285,6 +366,9 @@ function MainApp() {
           atmosphere={atmosphere}
           zenMode={zenMode}
         />
+
+        {/* 水墨纸境切换「晕染开来」粒子与湿边过渡层 */}
+        <WatercolorTransition bloom={watercolorBloom} reducedMotion={reducedMotion} />
 
         {/* 顶部全局导航栏 */}
         <Header

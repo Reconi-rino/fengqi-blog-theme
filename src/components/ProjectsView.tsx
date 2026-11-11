@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { Project } from '../types';
 import { allProjects } from '../utils/contentLoader';
 import { LeafMotif } from './Motifs';
+import { MistReveal, SpecimenCorners } from './MistReveal';
 import { MIST_EASE, PILL_SPRING } from '../utils/motion';
 
 const ProjectCard: React.FC<{ proj: Project; index: number }> = ({ proj, index }) => {
@@ -25,6 +26,7 @@ const ProjectCard: React.FC<{ proj: Project; index: number }> = ({ proj, index }
       onMouseLeave={() => setSpot((prev) => ({ ...prev, active: false }))}
       className="card-soft p-6 sm:p-7 flex flex-col justify-between group hover:border-[#A7CFC3] transition-all duration-300 hover:shadow-xs relative overflow-hidden"
     >
+      <SpecimenCorners active={spot.active} />
       {/* 鼠标跟随柔和微光 */}
       <div
         className="absolute inset-0 pointer-events-none transition-opacity duration-500"
@@ -96,16 +98,16 @@ export const ProjectsView: React.FC = () => {
   return (
     <div className="w-full max-w-7xl mx-auto pt-32 sm:pt-40 pb-28 px-6 sm:px-12 md:px-16">
       {/* 顶部标题与身份标签 */}
-      <motion.div
-        initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, ease: MIST_EASE }}
+      <MistReveal
+        duration={0.75}
+        yOffset={16}
+        blurAmount={6}
         className="mb-10 flex flex-col sm:flex-row sm:items-end justify-between gap-6"
       >
         <div>
-          <div className="flex items-center gap-2 text-xs font-sans tracking-widest text-[#8EABA8] mb-2 uppercase">
+          <div className="flex items-center gap-2 text-xs font-mono tracking-widest text-[#8EABA8] mb-2 uppercase">
             <span className="font-light">+</span>
-            <span>PROJECTS · {filteredProjects.length} 项</span>
+            <span>PROJECTS · {filteredProjects.length} ITEMS</span>
           </div>
           <div className="flex items-baseline gap-4">
             <h1 className="font-serif text-4xl sm:text-5xl font-normal text-[#2F4B4D] tracking-tight">
@@ -118,33 +120,33 @@ export const ProjectsView: React.FC = () => {
           </div>
         </div>
 
-        {/* 分类过滤胶囊 */}
+        {/* 分类下划线 Tab */}
         {categories.length > 2 && (
-          <div className="inline-flex flex-wrap items-center gap-1 p-1 rounded-full bg-white/45 border border-[#C7D9D6]/50 self-start sm:self-auto">
+          <div className="inline-flex flex-wrap items-center gap-4 border-b border-[#C7D9D6]/40 self-start sm:self-auto">
             {categories.map((cat) => {
               const active = selectedCategory === cat;
               return (
                 <button
                   key={cat}
                   onClick={() => setSelectedCategory(cat)}
-                  className={`relative px-3 py-1 rounded-full text-xs font-sans transition-colors focus:outline-none ${
-                    active ? 'text-[#F3F6F4]' : 'text-[#5C7A7C] hover:text-[#2F4B4D]'
+                  className={`relative pb-1.5 text-xs font-sans transition-colors focus:outline-none ${
+                    active ? 'text-[#2F4B4D] font-medium' : 'text-[#8EABA8] hover:text-[#2F4B4D]'
                   }`}
                 >
+                  {cat === 'all' ? '全部' : cat}
                   {active && (
                     <motion.span
                       layoutId="projects-cat-pill"
                       transition={PILL_SPRING}
-                      className="absolute inset-0 rounded-full bg-[#2F4B4D] -z-10"
+                      className="absolute bottom-0 left-0 right-0 h-[1.5px] bg-[#2F4B4D]"
                     />
                   )}
-                  {cat === 'all' ? '全部' : cat}
                 </button>
               );
             })}
           </div>
         )}
-      </motion.div>
+      </MistReveal>
 
       {/* 项目列表 */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

@@ -254,10 +254,32 @@ body {
 
 .card-soft {
   background: var(--surface-card-bg);
-  backdrop-filter: blur(12px);
+  backdrop-filter: blur(14px);
   border: 1px solid var(--surface-card-border);
-  border-radius: 14px;
+  border-radius: 10px;
   transition: background-color 0.6s ease, border-color 0.45s ease, box-shadow 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* 细微棉宣纸肌理纹理 (零网络请求 SVG Noise) */
+.paper-grain-overlay {
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E");
+  opacity: 0.028;
+  mix-blend-mode: multiply;
+}
+
+/* 色彩切换「水墨晕染」View Transition 支持 */
+html.atmosphere-transitioning::view-transition-old(root),
+html.atmosphere-transitioning::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+html.atmosphere-transitioning::view-transition-old(root) {
+  z-index: 1;
+}
+
+html.atmosphere-transitioning::view-transition-new(root) {
+  z-index: 2;
 }
 
 /* 里世界微光毛玻璃卡片 */

@@ -2,6 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { allNotes } from '../utils/contentLoader';
 import { LeafMotif } from './Motifs';
+import { MistReveal } from './MistReveal';
 import { MIST_EASE, PILL_SPRING } from '../utils/motion';
 
 export const NotesView: React.FC = () => {
@@ -24,16 +25,16 @@ export const NotesView: React.FC = () => {
   return (
     <div className="w-full max-w-5xl mx-auto pt-32 sm:pt-40 pb-28 px-6 sm:px-12">
       {/* 顶部标题与布局切换 */}
-      <motion.div
-        initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, ease: MIST_EASE }}
+      <MistReveal
+        duration={0.75}
+        yOffset={16}
+        blurAmount={6}
         className="mb-10 flex flex-col sm:flex-row sm:items-end justify-between gap-6"
       >
         <div>
-          <div className="flex items-center gap-2 text-xs font-sans tracking-widest text-[#8EABA8] mb-2 uppercase">
+          <div className="flex items-center gap-2 text-xs font-mono tracking-widest text-[#8EABA8] mb-2 uppercase">
             <span className="font-light">~</span>
-            <span>NOTES · {filteredNotes.length} 片段</span>
+            <span>NOTES · {filteredNotes.length} FRAGMENTS</span>
           </div>
           <div className="flex items-baseline gap-4">
             <h1 className="font-serif text-4xl sm:text-5xl font-normal text-[#2F4B4D] tracking-tight">
@@ -46,8 +47,8 @@ export const NotesView: React.FC = () => {
           </div>
         </div>
 
-        {/* 视图切换：时间轴 vs 灵感墙 */}
-        <div className="inline-flex items-center p-0.5 rounded-full bg-white/50 border border-[#C7D9D6]/60 text-xs font-sans self-start sm:self-auto">
+        {/* 视图切换：下划线切换条 */}
+        <div className="inline-flex items-center gap-5 border-b border-[#C7D9D6]/40 text-xs font-sans self-start sm:self-auto">
           {(
             [
               { id: 'timeline', label: '时间轴' },
@@ -59,42 +60,42 @@ export const NotesView: React.FC = () => {
               <button
                 key={mode.id}
                 onClick={() => setLayoutMode(mode.id)}
-                className={`relative px-3.5 py-1 rounded-full transition-colors focus:outline-none ${
+                className={`relative pb-1.5 transition-colors focus:outline-none ${
                   active ? 'text-[#2F4B4D] font-medium' : 'text-[#8EABA8] hover:text-[#2F4B4D]'
                 }`}
               >
+                {mode.label}
                 {active && (
                   <motion.span
                     layoutId="notes-view-pill"
                     transition={PILL_SPRING}
-                    className="absolute inset-0 rounded-full bg-white shadow-2xs border border-[#C7D9D6]/40 -z-10"
+                    className="absolute bottom-0 left-0 right-0 h-[1.5px] bg-[#2F4B4D]"
                   />
                 )}
-                {mode.label}
               </button>
             );
           })}
         </div>
-      </motion.div>
+      </MistReveal>
 
       {/* 标签筛选 */}
       {tags.length > 1 && (
-        <div className="flex flex-wrap items-center gap-1.5 mb-10">
+        <div className="flex flex-wrap items-center gap-4 border-b border-[#C7D9D6]/30 mb-10">
           {tags.map((tag) => {
             const active = selectedTag === tag;
             return (
               <button
                 key={tag}
                 onClick={() => setSelectedTag(tag)}
-                className={`relative px-3 py-1 rounded-full text-xs font-sans transition-colors focus:outline-none ${
-                  active ? 'text-[#F3F6F4]' : 'text-[#5C7A7C] hover:text-[#2F4B4D] bg-white/40'
+                className={`relative pb-2 text-xs font-sans transition-colors focus:outline-none ${
+                  active ? 'text-[#2F4B4D] font-medium' : 'text-[#8EABA8] hover:text-[#2F4B4D]'
                 }`}
               >
                 {active && (
                   <motion.span
                     layoutId="notes-tag-pill"
                     transition={PILL_SPRING}
-                    className="absolute inset-0 rounded-full bg-[#2F4B4D] -z-10"
+                    className="absolute bottom-0 left-0 right-0 h-[1.5px] bg-[#2F4B4D]"
                   />
                 )}
                 {tag === 'all' ? '全部随记' : `#${tag}`}

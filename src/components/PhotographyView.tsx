@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { allPhotos } from '../utils/contentLoader';
 import { LeafMotif } from './Motifs';
+import { MistReveal, CurtainImage } from './MistReveal';
 import { MIST_EASE, PILL_SPRING } from '../utils/motion';
 
 export const PhotographyView: React.FC = () => {
@@ -44,14 +45,14 @@ export const PhotographyView: React.FC = () => {
   return (
     <div className="w-full max-w-7xl mx-auto pt-32 sm:pt-40 pb-28 px-6 sm:px-12 md:px-16">
       {/* 顶部标题与视图切换 */}
-      <motion.div
-        initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, ease: MIST_EASE }}
+      <MistReveal
+        duration={0.75}
+        yOffset={16}
+        blurAmount={6}
         className="mb-12 flex flex-col sm:flex-row sm:items-end justify-between gap-6"
       >
         <div>
-          <div className="flex items-center gap-2 text-xs font-sans tracking-widest text-[#8EABA8] mb-2 uppercase">
+          <div className="flex items-center gap-2 text-xs font-mono tracking-widest text-[#8EABA8] mb-2 uppercase">
             <span className="font-light">□</span>
             <span>PHOTOGRAPHY · {allPhotos.length} FRAMES</span>
           </div>
@@ -66,8 +67,8 @@ export const PhotographyView: React.FC = () => {
           </div>
         </div>
 
-        {/* 布局模式切换 */}
-        <div className="inline-flex items-center p-0.5 rounded-full bg-white/50 border border-[#C7D9D6]/60 text-xs font-sans self-start sm:self-auto">
+        {/* 布局模式切换（下划线刊物切换条） */}
+        <div className="inline-flex items-center gap-5 border-b border-[#C7D9D6]/40 text-xs font-sans self-start sm:self-auto">
           {(
             [
               { id: 'grid', label: '双栏画廊' },
@@ -79,23 +80,23 @@ export const PhotographyView: React.FC = () => {
               <button
                 key={mode.id}
                 onClick={() => setViewMode(mode.id)}
-                className={`relative px-3.5 py-1 rounded-full transition-colors focus:outline-none ${
+                className={`relative pb-1.5 transition-colors focus:outline-none ${
                   active ? 'text-[#2F4B4D] font-medium' : 'text-[#8EABA8] hover:text-[#2F4B4D]'
                 }`}
               >
+                {mode.label}
                 {active && (
                   <motion.span
                     layoutId="photo-view-pill"
                     transition={PILL_SPRING}
-                    className="absolute inset-0 rounded-full bg-white shadow-2xs border border-[#C7D9D6]/40 -z-10"
+                    className="absolute bottom-0 left-0 right-0 h-[1.5px] bg-[#2F4B4D]"
                   />
                 )}
-                {mode.label}
               </button>
             );
           })}
         </div>
-      </motion.div>
+      </MistReveal>
 
       <AnimatePresence mode="wait">
         {viewMode === 'grid' ? (
@@ -121,17 +122,19 @@ export const PhotographyView: React.FC = () => {
                 }}
                 className="group cursor-pointer space-y-3"
               >
-                <div className="w-full aspect-[4/3] rounded-xl overflow-hidden bg-[#E6EDEB] border border-[#C7D9D6]/50 relative shadow-2xs">
-                  <img
+                <div className="w-full aspect-[4/3] rounded-lg overflow-hidden bg-[#E6EDEB] border border-[#C7D9D6]/50 relative shadow-2xs">
+                  <CurtainImage
                     src={photo.imageUrl}
                     alt={photo.title}
-                    className="w-full h-full object-cover filter saturate-90 transition-all duration-700 group-hover:scale-103 group-hover:saturate-100"
+                    delay={index * 0.07}
+                    className="w-full h-full"
+                    imgClassName="w-full h-full object-cover filter saturate-90 transition-all duration-700 group-hover:scale-103 group-hover:saturate-100"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#2F4B4D]/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-between p-4">
-                    <span className="px-3 py-1 rounded-full bg-white/85 backdrop-blur-xs text-xs font-sans text-[#2F4B4D]">
+                    <span className="px-2.5 py-1 rounded-sm bg-white/85 backdrop-blur-xs text-[11px] font-sans text-[#2F4B4D]">
                       点击放大查看
                     </span>
-                    <span className="px-2.5 py-1 rounded-full bg-black/30 backdrop-blur-xs text-[10px] font-mono text-white/90">
+                    <span className="px-2 py-1 rounded-sm bg-black/30 backdrop-blur-xs text-[10px] font-mono text-white/90">
                       {photo.camera}
                     </span>
                   </div>

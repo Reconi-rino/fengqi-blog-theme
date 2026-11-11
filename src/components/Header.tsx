@@ -13,7 +13,7 @@ interface HeaderProps {
   reducedMotion: boolean;
   onToggleReducedMotion: () => void;
   atmosphere: AtmosphereMode;
-  onCycleAtmosphere: () => void;
+  onCycleAtmosphere: (origin?: { x: number; y: number }) => void;
   zenMode?: boolean;
   onOpenSecretBase?: () => void;
 }
@@ -144,40 +144,56 @@ export const Header: React.FC<HeaderProps> = ({
         </AnimatePresence>
       </div>
 
-      {/* 右上角操作区：保持纯粹克制 */}
-      <div className="pointer-events-auto flex items-center gap-2.5 sm:gap-3.5 shrink-0">
-        {/* 纸境切换按钮（晨雾 / 暖宣 / 晴瓷） */}
-        <button
-          onClick={onCycleAtmosphere}
-          className="px-2.5 py-1 text-xs rounded-full border border-[#C7D9D6]/60 bg-white/45 backdrop-blur-xs text-[#5C7A7C] hover:text-[#2F4B4D] hover:border-[#A7CFC3] hover:bg-white/75 transition-all flex items-center gap-1.5 focus:outline-none"
+      {/* 右上角操作区：保持纯粹克制与画廊手帖质感 */}
+      <div className="pointer-events-auto flex items-center gap-2 sm:gap-3 shrink-0">
+        {/* 纸境切换按钮：水彩晕染墨碟标牌 */}
+        <motion.button
+          whileTap={{ scale: 0.94 }}
+          onClick={(e) => {
+            const rect = e.currentTarget.getBoundingClientRect();
+            const x = e.clientX || rect.left + rect.width / 2;
+            const y = e.clientY || rect.top + rect.height / 2;
+            onCycleAtmosphere({ x, y });
+          }}
+          className="group relative px-2.5 py-1 text-xs rounded-md border border-[#C7D9D6]/65 bg-white/40 backdrop-blur-xs text-[#5C7A7C] hover:text-[#2F4B4D] hover:border-[#A7CFC3] hover:bg-white/75 transition-all flex items-center gap-2 focus:outline-none"
           title={`切换纸境 (${activePreset.name} · ${activePreset.desc})`}
         >
-          <span
-            className="w-2.5 h-2.5 rounded-full border border-[#2F4B4D]/25 shrink-0 transition-colors duration-500"
-            style={{
-              background: `linear-gradient(135deg, ${activePreset.swatchPrimary} 45%, ${activePreset.swatchAccent} 100%)`,
-            }}
-          />
-          <span className="hidden sm:inline font-sans text-[11px]">{activePreset.name}</span>
-        </button>
+          <span className="relative flex items-center justify-center w-3 h-3">
+            <span
+              className="absolute inset-0 rounded-full opacity-40 group-hover:scale-150 group-hover:opacity-0 transition-all duration-500"
+              style={{ backgroundColor: activePreset.swatchAccent }}
+            />
+            <span
+              className="w-2.5 h-2.5 rounded-full border border-[#2F4B4D]/25 shrink-0 transition-colors duration-500"
+              style={{
+                background: `radial-gradient(circle at 35% 35%, ${activePreset.swatchPrimary} 20%, ${activePreset.swatchAccent} 100%)`,
+              }}
+            />
+          </span>
+          <span className="hidden sm:inline font-serif text-[11px] tracking-wider">
+            {activePreset.name}
+          </span>
+        </motion.button>
 
         {/* 微动效开/关控制 */}
-        <button
+        <motion.button
+          whileTap={{ scale: 0.94 }}
           onClick={onToggleReducedMotion}
-          className="px-2.5 py-1 text-xs rounded-full border border-[#C7D9D6]/60 bg-white/45 backdrop-blur-xs text-[#5C7A7C] hover:text-[#2F4B4D] hover:border-[#A7CFC3] hover:bg-white/75 transition-all flex items-center gap-1.5 focus:outline-none"
+          className="px-2.5 py-1 text-xs rounded-md border border-[#C7D9D6]/65 bg-white/40 backdrop-blur-xs text-[#5C7A7C] hover:text-[#2F4B4D] hover:border-[#A7CFC3] hover:bg-white/75 transition-all flex items-center gap-1.5 focus:outline-none"
           title={reducedMotion ? '开启背景动态生态' : '减弱背景动态'}
         >
           <LeafMotif size={13} color={reducedMotion ? '#8EABA8' : '#A7CFC3'} />
-          <span className="hidden md:inline font-sans text-[11px]">
-            {reducedMotion ? '动效减弱' : '微动态'}
+          <span className="hidden md:inline font-sans text-[11px] tracking-wide">
+            {reducedMotion ? '静息' : '微动态'}
           </span>
-        </button>
+        </motion.button>
 
         {/* 展开式索引入口 (+) / (×) */}
         <motion.button
+          whileHover={{ scale: 1.04 }}
           whileTap={{ scale: 0.92 }}
           onClick={onToggleIndex}
-          className={`w-9 h-9 rounded-full flex items-center justify-center border transition-colors duration-300 focus:outline-none ${
+          className={`group relative w-9 h-9 rounded-full flex items-center justify-center border transition-colors duration-300 focus:outline-none ${
             isIndexExpanded
               ? 'bg-[#2F4B4D] text-[#F3F6F4] border-[#2F4B4D] shadow-xs'
               : 'bg-white/65 text-[#2F4B4D] border-[#C7D9D6] hover:border-[#2F4B4D] hover:bg-white'
@@ -185,6 +201,9 @@ export const Header: React.FC<HeaderProps> = ({
           aria-label={isIndexExpanded ? '关闭展开索引' : '展开导航索引'}
           title={isIndexExpanded ? '收起索引 (Esc)' : '展开索引 (+)'}
         >
+          {!isIndexExpanded && (
+            <span className="pointer-events-none absolute inset-0 rounded-full border border-[#A7CFC3]/50 scale-100 opacity-0 group-hover:scale-125 group-hover:opacity-100 transition-all duration-500" />
+          )}
           <motion.svg
             width="15"
             height="15"

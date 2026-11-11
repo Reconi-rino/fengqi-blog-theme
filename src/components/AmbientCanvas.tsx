@@ -5,6 +5,7 @@ import { AtmosphereMode } from '../utils/motion';
 export interface AmbientCanvasHandle {
   triggerBreeze: () => void;
   spawnRipple?: (x: number, y: number) => void;
+  spawnPigmentBloom?: (x: number, y: number, mode: AtmosphereMode) => void;
 }
 
 interface AmbientCanvasProps {
@@ -155,6 +156,40 @@ export const AmbientCanvas = forwardRef<AmbientCanvasHandle, AmbientCanvasProps>
         }
       },
       spawnRipple: spawnRippleAt,
+      spawnPigmentBloom: (x: number, y: number, mode: AtmosphereMode) => {
+        if (reducedMotion) return;
+        const ringColor =
+          mode === 'warm'
+            ? 'rgba(232, 180, 140, 0.42)'
+            : mode === 'celadon'
+            ? 'rgba(138, 184, 173, 0.42)'
+            : 'rgba(167, 207, 195, 0.42)';
+
+        // 扩散两层柔和涟漪环
+        ripplesRef.current.push(
+          { x, y, radius: 10, maxRadius: 120, alpha: 0.45, color: ringColor },
+          { x, y, radius: 4, maxRadius: 210, alpha: 0.3, color: ringColor }
+        );
+
+        // 沿墨滴向四周轻柔散逸水彩微粒
+        const kinds: ParticleKind[] = ['bubble', 'leaf', 'circle', 'dot'];
+        for (let i = 0; i < 12; i++) {
+          const angle = (Math.PI * 2 * i) / 12 + (Math.random() - 0.5) * 0.4;
+          const speed = 0.85 + Math.random() * 1.1;
+          const kind = kinds[i % kinds.length];
+          const p = createParticle(
+            x,
+            y,
+            kind,
+            Math.cos(angle) * speed,
+            Math.sin(angle) * speed
+          );
+          p.color = getPaletteColor(kind, mode);
+          p.maxLife = 240 + Math.random() * 160;
+          p.maxAlpha = 0.55;
+          particlesRef.current.push(p);
+        }
+      },
     }));
 
     useEffect(() => {
