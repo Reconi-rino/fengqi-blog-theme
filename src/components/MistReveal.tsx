@@ -22,7 +22,7 @@ export const MistReveal: React.FC<MistRevealProps> = ({
   yOffset = 16,
   blurAmount = 7,
   className = '',
-  viewportOnce = false,
+  viewportOnce: _viewportOnce = false,
 }) => {
   const initial = {
     opacity: 0,
@@ -34,20 +34,6 @@ export const MistReveal: React.FC<MistRevealProps> = ({
     y: 0,
     filter: 'blur(0px)',
   };
-
-  if (viewportOnce) {
-    return (
-      <motion.div
-        initial={initial}
-        whileInView={target}
-        viewport={{ once: true, amount: 0.2 }}
-        transition={{ duration, delay, ease: MIST_EASE }}
-        className={className}
-      >
-        {children}
-      </motion.div>
-    );
-  }
 
   return (
     <motion.div

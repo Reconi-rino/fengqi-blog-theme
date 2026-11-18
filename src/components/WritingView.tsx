@@ -256,15 +256,12 @@ export const WritingView: React.FC<WritingViewProps> = ({ onSelectArticle }) => 
                               key={art.id}
                               onMouseEnter={() => setHoveredArticle(art)}
                               onClick={() => onSelectArticle(art)}
-                              className="relative group cursor-pointer p-3.5 sm:p-4 rounded-xl transition-colors duration-200 border border-transparent"
+                              className={`relative group cursor-pointer p-3.5 sm:p-4 rounded-xl transition-all duration-200 border ${
+                                isHovered
+                                  ? 'bg-white/75 border-[#C7D9D6]/60 shadow-2xs'
+                                  : 'hover:bg-white/45 border-transparent'
+                              }`}
                             >
-                              {isHovered && (
-                                <motion.div
-                                  layoutId="writing-row-highlight"
-                                  transition={GENTLE_SPRING}
-                                  className="absolute inset-0 rounded-xl bg-white/75 border border-[#C7D9D6]/60 shadow-2xs -z-10"
-                                />
-                              )}
 
                               <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-2">
                                 {/* 左部：日期 + 分类 + 动机图标 + 标题 */}

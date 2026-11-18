@@ -113,17 +113,11 @@ export const ExpandingIndex: React.FC<ExpandingIndexProps> = ({
                   className={`relative w-full group text-left px-5 sm:px-8 py-5 rounded-xl border transition-colors duration-300 flex items-center justify-between gap-4 focus:outline-none ${
                     active
                       ? 'border-[#A7CFC3]/80 bg-white/75 shadow-2xs'
-                      : 'border-[#C7D9D6]/40 bg-white/35 hover:border-[#A7CFC3]/70'
+                      : isHovered
+                        ? 'border-[#A7CFC3]/75 bg-white/75 shadow-2xs'
+                        : 'border-[#C7D9D6]/40 bg-white/35 hover:border-[#A7CFC3]/70'
                   }`}
                 >
-                  {/* 滑移水彩高亮背板 */}
-                  {isHovered && (
-                    <motion.div
-                      layoutId="index-hover-wash"
-                      transition={GENTLE_SPRING}
-                      className="absolute inset-0 rounded-xl bg-white/75 -z-10 shadow-2xs"
-                    />
-                  )}
 
                   {/* 左侧：符号 + 英文名 */}
                   <div className="flex items-center gap-4 sm:gap-6 min-w-[145px] sm:min-w-[195px]">
@@ -179,17 +173,12 @@ export const ExpandingIndex: React.FC<ExpandingIndexProps> = ({
                         y: e.clientY || rect.top + rect.height / 2,
                       });
                     }}
-                    className={`relative px-3.5 py-1 rounded-md text-xs font-serif tracking-wider transition-colors flex items-center gap-2 focus:outline-none ${
-                      isSelected ? 'text-[#2F4B4D] font-medium' : 'text-[#8EABA8] hover:text-[#2F4B4D]'
+                    className={`relative px-3.5 py-1 rounded-md text-xs font-serif tracking-wider transition-all flex items-center gap-2 focus:outline-none ${
+                      isSelected
+                        ? 'text-[#2F4B4D] font-medium bg-white shadow-2xs border border-[#C7D9D6]/50'
+                        : 'text-[#8EABA8] hover:text-[#2F4B4D] border border-transparent'
                     }`}
                   >
-                    {isSelected && (
-                      <motion.span
-                        layoutId="index-atmosphere-pill"
-                        transition={PILL_SPRING}
-                        className="absolute inset-0 rounded-md bg-white shadow-2xs border border-[#C7D9D6]/50 -z-10"
-                      />
-                    )}
                     <span
                       className="w-2.5 h-2.5 rounded-full border border-[#2F4B4D]/25"
                       style={{

@@ -246,9 +246,9 @@ function MainApp() {
     handleSelectAtmosphere(next, origin);
   };
 
-  // 页面切换时平滑滚动到顶部并退出专注与索引展开态
+  // 页面切换时立即复位滚动位置并退出专注与索引展开态
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo(0, 0);
     setIsIndexExpanded(false);
     setZenMode(false);
   }, [location]);
@@ -398,17 +398,15 @@ function MainApp() {
           )}
         </AnimatePresence>
 
-        {/* 主视图区域：仅做优雅透明过渡以保证内部 sticky 元素正常锚定 */}
+        {/* 主视图区域：直接挂载新路由并配合丝滑淡入，避免 mode="wait" 与子组件 layoutId 发生退出队列阻塞 */}
         <main className="relative z-10 flex-1">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={location}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.24, ease: MIST_EASE }}
-            >
-              <Switch>
+          <motion.div
+            key={location}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.28, ease: MIST_EASE }}
+          >
+            <Switch location={location}>
                 <Route path="/">
                   <LandingView
                     onNavigateSection={handleSelectSection}
@@ -481,9 +479,8 @@ function MainApp() {
                     onTriggerBreeze={triggerBreeze}
                   />
                 </Route>
-              </Switch>
-            </motion.div>
-          </AnimatePresence>
+            </Switch>
+          </motion.div>
         </main>
 
         {/* 底部极轻页脚 */}
