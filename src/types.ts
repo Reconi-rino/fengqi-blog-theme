@@ -7,7 +7,8 @@ export type ViewMode =
   | 'notes' 
   | 'about' 
   | 'now' 
-  | 'elsewhere';
+  | 'elsewhere'
+  | 'student';
 
 export type ArticleCategory = 'essay' | 'tech' | 'note';
 

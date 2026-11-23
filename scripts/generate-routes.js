@@ -26,6 +26,7 @@ function generateRoutes() {
     'about',
     'now',
     'elsewhere',
+    'student',
   ];
 
   // 2. 动态扫描所有 Markdown 文章 Slug

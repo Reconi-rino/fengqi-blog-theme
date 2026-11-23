@@ -16,6 +16,7 @@ import { PhotographyView } from './components/PhotographyView';
 import { ProjectsView } from './components/ProjectsView';
 import { NotesView } from './components/NotesView';
 import { NowView, ElsewhereView } from './components/NowView';
+import { StudentInfoView } from './components/StudentInfoView';
 import { AboutModal } from './components/AboutModal';
 import { RssModal } from './components/RssModal';
 import { InnerWorld } from './components/inner/InnerWorld';
@@ -145,6 +146,7 @@ function MainApp() {
     if (location === '/notes') return 'notes';
     if (location === '/now') return 'now';
     if (location === '/elsewhere') return 'elsewhere';
+    if (location === '/student') return 'student';
     if (location === '/about') return 'about';
     return 'landing';
   };
@@ -456,6 +458,10 @@ function MainApp() {
                   <ElsewhereView />
                 </Route>
 
+                <Route path="/student">
+                  <StudentInfoView onNavigateSection={handleSelectSection} />
+                </Route>
+
                 <Route path="/about">
                   <LandingView
                     onNavigateSection={handleSelectSection}
@@ -502,6 +508,13 @@ function MainApp() {
               className="text-[#8EABA8] hover:text-[#2F4B4D] hover:underline underline-offset-4 transition-colors flex items-center gap-1 focus:outline-none"
             >
               <span>RSS Feed</span>
+            </button>
+            <span className="text-[#C7D9D6]">/</span>
+            <button
+              onClick={() => handleSelectSection('student')}
+              className="text-[#8EABA8] hover:text-[#2F4B4D] hover:underline underline-offset-4 transition-colors flex items-center gap-1 focus:outline-none"
+            >
+              <span>作业信息 · 狄伟嘉</span>
             </button>
             <span className="text-[#C7D9D6]">/</span>
             <button

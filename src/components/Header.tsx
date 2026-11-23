@@ -28,6 +28,7 @@ const VIEW_LABELS: Record<ViewMode, string> = {
   about: 'About · 关于',
   now: 'Now · 近况',
   elsewhere: 'Elsewhere · 足迹',
+  student: 'Student · 作业信息',
 };
 
 export const Header: React.FC<HeaderProps> = ({

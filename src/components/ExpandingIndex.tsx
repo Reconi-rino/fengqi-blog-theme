@@ -222,6 +222,13 @@ export const ExpandingIndex: React.FC<ExpandingIndexProps> = ({
               >
                 Elsewhere 足迹
               </button>
+              <span className="text-[#C7D9D6]">/</span>
+              <button
+                onClick={() => onSelectSection('student')}
+                className="hover:text-[#2F4B4D] hover:underline underline-offset-4 transition-colors focus:outline-none"
+              >
+                Student 作业信息
+              </button>
             </div>
 
             <div className="flex items-center gap-2 text-[#8EABA8]">
