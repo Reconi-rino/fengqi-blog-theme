@@ -1,3 +1,7 @@
+/**
+ * 近况（/now）与外部足迹（/elsewhere）视图组件
+ * NowView 渲染 content/now.md 正文，ElsewhereView 展示 content/elsewhere.yaml 中的外部社交与个人链接。
+ */
 import React from 'react';
 import { motion } from 'framer-motion';
 import { LeafMotif, PeachHeartMotif } from './Motifs';

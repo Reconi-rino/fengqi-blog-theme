@@ -1,3 +1,9 @@
+/**
+ * 全站共享 TypeScript 类型定义
+ * 涵盖视图路由枚举、文章/摄影/项目/随记内容实体以及背景微生态粒子数据结构。
+ */
+
+// 站点主视图路由标识
 export type ViewMode = 
   | 'landing' 
   | 'writing' 
@@ -10,8 +16,10 @@ export type ViewMode =
   | 'elsewhere'
   | 'student';
 
+// 文章分类枚举：随笔 / 技术 / 笔记
 export type ArticleCategory = 'essay' | 'tech' | 'note';
 
+// 文章数据结构（由 content/posts/*.md Frontmatter 与正文解析生成）
 export interface Article {
   id: string;
   slug: string;

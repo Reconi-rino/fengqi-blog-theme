@@ -1,5 +1,10 @@
+/**
+ * 默认演示与兜底数据集
+ * 当 content/ 目录下对应 YAML/Markdown 数据为空时，作为示例内容展示，确保主题开箱即用。
+ */
 import { Article, Photo, Project, NoteItem } from '../types';
 
+// 默认示例文章列表
 export const ARTICLES_DATA: Article[] = [
   {
     id: 'art-1',

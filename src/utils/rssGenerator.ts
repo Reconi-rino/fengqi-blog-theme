@@ -1,5 +1,12 @@
+/**
+ * 客户端动态 RSS 2.0 XML 生成工具
+ * 用于在 RSS 订阅弹窗中根据当前部署域名实时生成并预览/复制/下载标准订阅源。
+ */
 import { siteConfig, allArticles } from './contentLoader';
 
+/**
+ * 动态获取站点访问根地址（优先使用 fengqi.config.yaml 中的 site.url，否则自适应当前浏览器域名与子路径）
+ */
 export function getDynamicSiteUrl(): string {
   if (siteConfig.site?.url) {
     return siteConfig.site.url.replace(/\/$/, '');
@@ -12,6 +19,9 @@ export function getDynamicSiteUrl(): string {
   return '';
 }
 
+/**
+ * 根据全站文章列表拼装符合 RSS 2.0 规范的 XML 字符串
+ */
 export function generateRssXml(customSiteUrl?: string): string {
   const siteUrl = customSiteUrl || getDynamicSiteUrl();
   const now = new Date().toUTCString();
