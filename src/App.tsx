@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { flushSync } from 'react-dom';
 import { Router, Route, Switch, useLocation, useParams } from 'wouter';
+import { useHashLocation } from 'wouter/use-hash-location';
 import { AnimatePresence, motion, MotionConfig } from 'framer-motion';
 import { ViewMode, Article } from './types';
 import { allArticles, siteConfig } from './utils/contentLoader';
@@ -105,9 +106,13 @@ function MainApp() {
   // 纸境氛围色调（晨雾 默认 / 暖宣 / 晴瓷）
   const [atmosphere, setAtmosphere] = useState<AtmosphereMode>(() => {
     if (typeof window !== 'undefined') {
-      const saved = window.localStorage.getItem('fengqi-atmosphere') as AtmosphereMode | null;
-      if (saved === 'mist' || saved === 'warm' || saved === 'celadon') {
-        return saved;
+      try {
+        const saved = window.localStorage.getItem('fengqi-atmosphere') as AtmosphereMode | null;
+        if (saved === 'mist' || saved === 'warm' || saved === 'celadon') {
+          return saved;
+        }
+      } catch {
+        // file:// 或隐私模式下可能禁止访问 localStorage，安全回退默认主题
       }
     }
     return 'mist';
@@ -586,11 +591,23 @@ function MainApp() {
 }
 
 export function App() {
+  // 双击本地 index.html（file:// 协议）时自动切换 Hash 路由，避免 History.pushState 触发跨域安全限制
+  const isFileProtocol =
+    typeof window !== 'undefined' && window.location.protocol === 'file:';
+
   const getAppBase = () => {
     let base = (import.meta.env.BASE_URL || '/').replace(/\/$/, '');
     if (base === '.' || base === './') base = '';
     return base;
   };
+
+  if (isFileProtocol) {
+    return (
+      <Router hook={useHashLocation}>
+        <MainApp />
+      </Router>
+    );
+  }
 
   return (
     <Router base={getAppBase()}>

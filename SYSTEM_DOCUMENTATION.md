@@ -67,9 +67,9 @@
    ```bash
    npm run preview
    ```
-5. **使用预编译归档包直接部署**
-   - 仓库根目录已提供预编译产物压缩包 `fengqi-blog-2024214322-diweijia-dist.zip`。
-   - 解压后可直接部署至任意静态 Web 服务器（Nginx、Apache、Vercel、Cloudflare Pages、GitHub Pages，或本地执行 `npx serve .` 预览）。
+5. **使用预编译归档包直接打开或部署**
+   - 仓库根目录已提供离线预编译产物压缩包 `fengqi-blog-2024214322-diweijia-dist.zip`（由 `npm run build:offline` 生成）。
+   - 该离线版采用相对路径、经典 IIFE 脚本包（无 `type="module"` CORS 限制）以及 `file://` 协议自动 Hash 路由回退，**解压后直接双击 `index.html` 即可在浏览器中完整浏览所有页面**；同时也可直接部署至 Nginx / Apache / `npx serve .` 等任意静态服务器。
 
 ---
 

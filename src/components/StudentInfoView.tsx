@@ -95,7 +95,7 @@ export const StudentInfoView: React.FC<StudentInfoViewProps> = ({
           </div>
 
           {/* 姓名 / 学号 / 学校 信息网格 */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-5">
+          <div className="grid grid-cols-1 sm:grid-cols-[1fr_1.15fr_1.45fr] gap-4 sm:gap-5">
             {INFO_ITEMS.map((item, idx) => (
               <motion.div
                 key={item.label}
@@ -112,7 +112,7 @@ export const StudentInfoView: React.FC<StudentInfoViewProps> = ({
                   {item.label}
                 </span>
                 <p
-                  className={`text-xl sm:text-2xl text-[#2F4B4D] tracking-wide ${
+                  className={`text-xl text-[#2F4B4D] tracking-wide whitespace-nowrap ${
                     item.mono ? 'font-mono font-medium' : 'font-serif font-normal'
                   }`}
                 >

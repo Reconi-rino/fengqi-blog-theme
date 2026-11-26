@@ -8,6 +8,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build && node scripts/generate-rss.js && node scripts/generate-routes.js",
+    "build:offline": "tsc && vite build --mode offline && node scripts/generate-rss.js",
     "rss": "node scripts/generate-rss.js",
     "routes": "node scripts/generate-routes.js",
     "preview": "vite preview",
